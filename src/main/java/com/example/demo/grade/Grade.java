@@ -1,6 +1,8 @@
 package com.example.demo.grade;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Grade {
 
-  private Long id;
+  private UUID id;
   private LocalDate date;
   private int grade;
   private String subject;
