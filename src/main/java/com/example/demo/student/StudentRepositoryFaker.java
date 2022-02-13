@@ -5,16 +5,17 @@ import static com.example.demo.student.StudentFactory.student3Maker;
 import static com.example.demo.student.StudentFactory.studentMaker;
 
 import java.util.List;
+import java.util.UUID;
 
 public class StudentRepositoryFaker {
 
-  public static List<Student> students = List.of(studentMaker(1L), student2Maker(2L), student3Maker(3L));
+  public static List<Student> students = List.of(studentMaker(), student2Maker(), student3Maker());
 
   public List<Student> findAll() {
     return students;
   }
 
-  public Student findById(Long id) throws ClassNotFoundException {
+  public Student findById(UUID id) throws ClassNotFoundException {
 
     Student student = students.stream()
         .filter(s -> s.getId() == id)

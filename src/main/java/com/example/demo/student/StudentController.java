@@ -1,5 +1,7 @@
 package com.example.demo.student;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ public class StudentController {
   }
 
   @DeleteMapping(path = "/{id}")
-  public String deleteStudent(@PathVariable Long id) {
+  public String deleteStudent(@PathVariable UUID id) {
     String deleting = studentService.deleteStudent(id);
     return deleting;
   }
@@ -47,7 +49,7 @@ public class StudentController {
   }
 
   @PutMapping(path = "/{id}")
-  public String updateStudent(@PathVariable Long id, @RequestParam String email, int age) {
+  public String updateStudent(@PathVariable UUID id, @RequestParam String email, int age) {
     String updatedStudent = studentService.updateStudent(id, email, age);
     return updatedStudent;
   }

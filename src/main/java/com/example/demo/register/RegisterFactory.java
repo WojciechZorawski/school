@@ -1,20 +1,21 @@
 package com.example.demo.register;
 
-import static com.example.demo.teacher.TeacherFactory.teacher2Maker;
-import static com.example.demo.teacher.TeacherFactory.teacherMaker;
 import static com.example.demo.student.StudentFactory.student2Maker;
 import static com.example.demo.student.StudentFactory.student3Maker;
 import static com.example.demo.student.StudentFactory.studentMaker;
+import static com.example.demo.teacher.TeacherFactory.teacher2Maker;
+import static com.example.demo.teacher.TeacherFactory.teacherMaker;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RegisterFactory {
 
   public static Register registerMaker() {
     Register newRegister = Register.builder()
-        .id(1L)
-        .teacher(teacherMaker(1L))
-        .listOfStudents(List.of(studentMaker(1L), student2Maker(2L), student3Maker(3L)))
+        .id(UUID.randomUUID())
+        .teacher(teacherMaker())
+        .listOfStudents(List.of(studentMaker(), student2Maker(), student3Maker()))
         .build();
     return newRegister;
 
@@ -22,9 +23,9 @@ public class RegisterFactory {
 
   public static Register register2Maker() {
     Register newRegister2 = Register.builder()
-        .id(2L)
-        .teacher(teacher2Maker(2L))
-        .listOfStudents(List.of(studentMaker(1L), student3Maker(3L)))
+        .id(UUID.randomUUID())
+        .teacher(teacher2Maker())
+        .listOfStudents(List.of(studentMaker(), student3Maker()))
         .build();
     return newRegister2;
 

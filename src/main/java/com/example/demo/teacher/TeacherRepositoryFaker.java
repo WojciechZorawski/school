@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class TeacherRepositoryFaker {
 
-  public static List<Teacher> teachers = List.of(teacherMaker(1L), teacher2Maker(2L));
+  public static List<Teacher> teachers = List.of(teacherMaker(), teacher2Maker());
 
   public List<Teacher> findAll() {
     return teachers;
