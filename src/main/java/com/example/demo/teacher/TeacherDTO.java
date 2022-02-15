@@ -1,7 +1,6 @@
 package com.example.demo.teacher;
 
 import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class TeacherDTO {
   private int age;
   private String profession;
 
-  public Teacher toEntity(){
+  public Teacher toEntity() {
     return Teacher.builder()
         .id(UUID.randomUUID())
         .name(name)
@@ -29,6 +28,5 @@ public class TeacherDTO {
         .profession(profession)
         .build();
   }
-
 
 }

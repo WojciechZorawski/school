@@ -2,11 +2,13 @@ package com.example.demo.teacher;
 
 import static java.util.UUID.randomUUID;
 
+import java.util.UUID;
+
 public class TeacherFactory {
 
   public static Teacher teacherMaker() {
     Teacher newTeacher = Teacher.builder()
-        .id(randomUUID())
+        .id(UUID.fromString("36dec9fd-26f3-4591-b05c-794e4dd84c0b"))
         .name("Tadeusz")
         .lastName("Sichocki")
         .age(50)
