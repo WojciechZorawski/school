@@ -2,17 +2,18 @@ package com.example.demo.student;
 
 import static com.example.demo.student.StudentFactory.studentMaker;
 
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
 
   public Student getStudent() {
-    return studentMaker(3L);
+    return studentMaker();
 
   }
 
-  public String deleteStudent(Long id) {
+  public String deleteStudent(UUID id) {
     return "Student usuniety o id " + id;
   }
 
@@ -25,9 +26,9 @@ public class StudentService {
     return newStudent;
   }
 
-  public String updateStudent(Long id, String email, int age) {
-    Student updatedStudent = studentMaker(1L);
-    Student updatedStudent2 = studentMaker(2L);
+  public String updateStudent(UUID id, String email, int age) {
+    Student updatedStudent = studentMaker();
+    Student updatedStudent2 = studentMaker();
     if (id == updatedStudent.getId()) {
       updatedStudent.setEmail(email);
       updatedStudent.setAge(age);

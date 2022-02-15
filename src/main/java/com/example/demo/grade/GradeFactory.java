@@ -1,12 +1,13 @@
 package com.example.demo.grade;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class GradeFactory {
 
-  public static Grade gradeMaker(Long id) {
+  public static Grade gradeMaker() {
     Grade newGrade = Grade.builder()
-        .id(id)
+        .id(UUID.randomUUID())
         .date(LocalDate.of(2022, 2, 10))
         .grade(3)
         .subject("Jezyk polski")
@@ -15,9 +16,9 @@ public class GradeFactory {
 
   }
 
-  public static Grade grade2Maker(Long id) {
+  public static Grade grade2Maker() {
     Grade newGrade2 = Grade.builder()
-        .id(id)
+        .id(UUID.randomUUID())
         .date(LocalDate.of(2022, 2, 9))
         .grade(4)
         .subject("Matematyka")
@@ -26,9 +27,9 @@ public class GradeFactory {
 
   }
 
-  public static Grade grade3Maker(Long id) {
+  public static Grade grade3Maker() {
     Grade newGrade3 = Grade.builder()
-        .id(id)
+        .id(UUID.randomUUID())
         .date(LocalDate.of(2022, 2, 8))
         .grade(5)
         .subject("Jezyk polski")

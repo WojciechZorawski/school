@@ -4,6 +4,7 @@ import static com.example.demo.register.RegisterFactory.register2Maker;
 import static com.example.demo.register.RegisterFactory.registerMaker;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RegisterRepositoryFaker {
 
@@ -13,7 +14,7 @@ public class RegisterRepositoryFaker {
     return registers;
   }
 
-  public Register findById(Long id) throws ClassNotFoundException {
+  public Register findById(UUID id) throws ClassNotFoundException {
     Register register = registers.stream()
         .filter(d -> d.getId() == id)
         .findFirst()

@@ -3,6 +3,7 @@ package com.example.demo.register;
 import com.example.demo.student.Student;
 import com.example.demo.teacher.Teacher;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.ToString;
 
 public class Register {
 
-  private Long id;
+  private UUID id;
   private Teacher teacher;
   private List<Student> listOfStudents;
 

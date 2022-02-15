@@ -5,16 +5,17 @@ import static com.example.demo.grade.GradeFactory.grade3Maker;
 import static com.example.demo.grade.GradeFactory.gradeMaker;
 
 import java.util.List;
+import java.util.UUID;
 
 public class GradeRepositoryFaker {
 
-  public static List<Grade> grades = List.of(gradeMaker(1L), grade2Maker(2L), grade3Maker(3L));
+  public static List<Grade> grades = List.of(gradeMaker(), grade2Maker(), grade3Maker());
 
   public List<Grade> findAll() {
     return grades;
   }
 
-  public Grade findById(Long id) throws ClassNotFoundException {
+  public Grade findById(UUID id) throws ClassNotFoundException {
     Grade grade = grades.stream()
         .filter(o -> o.getId() == id)
         .findFirst()
