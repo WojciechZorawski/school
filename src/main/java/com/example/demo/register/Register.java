@@ -1,10 +1,9 @@
 package com.example.demo.register;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.example.demo.student.Student;
 import com.example.demo.teacher.Teacher;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
