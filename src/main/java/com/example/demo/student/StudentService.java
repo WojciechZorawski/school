@@ -1,44 +1,54 @@
 package com.example.demo.student;
 
-import static com.example.demo.student.StudentFactory.studentMaker;
-
+import com.example.demo.exception.BusinessLogicException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
 
-  public Student getStudent() {
-    return studentMaker();
+  StudentRepositoryFaker studentRepositoryFaker = new StudentRepositoryFaker();
 
-  }
-
-  public String deleteStudent(UUID id) {
-    return "Student usuniety o id " + id;
-  }
-
-  public String deleteStudent1(String studentId) {
-    Long long1 = Long.valueOf(studentId);
-    return "Student znowu usuniety o id " + long1;
-  }
-
-  public Student createStudent(Student newStudent) {
-    return newStudent;
-  }
-
-  public String updateStudent(UUID id, String email, int age) {
-    Student updatedStudent = studentMaker();
-    Student updatedStudent2 = studentMaker();
-    if (id == updatedStudent.getId()) {
-      updatedStudent.setEmail(email);
-      updatedStudent.setAge(age);
-      return updatedStudent.toString();
-    } else if (id == updatedStudent2.getId()) {
-      updatedStudent2.setEmail(email);
-      updatedStudent2.setAge(age);
-      return updatedStudent2.toString();
+  public StudentDTO getStudentById(UUID id) {
+    try {
+      Student takenStudent = studentRepositoryFaker.findById(id);
+      return takenStudent.toDto();
+    } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Bledne id");
     }
-    return null;
+  }
+
+  public List<StudentDTO> getAllStudents() {
+    List<StudentDTO> takenStudents = studentRepositoryFaker.findAll().stream()
+        .map(student -> student.toDto())
+        .collect(Collectors.toList());
+    return takenStudents;
+  }
+
+  public StudentDTO createStudent(StudentDTO newStudent) {
+    try {
+      Student save = studentRepositoryFaker.save(newStudent.toEntity());
+      return save.toDto();
+    } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Nie udalo sie utworzyc nowego studenta");
+    }
+  }
+
+  public StudentDTO updateStudent(UUID id, String name, String email) {
+    try {
+      Student updatedStudent = studentRepositoryFaker.findById(id);
+      updatedStudent.setName(name);
+      updatedStudent.setEmail(email);
+      return updatedStudent.toDto();
+    } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Bledne id");
+    }
+  }
+
+  public void deleteStudent(UUID id) {
+    studentRepositoryFaker.deleteById(id);
   }
 
 }

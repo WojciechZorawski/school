@@ -8,26 +8,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+
 
 @Builder
 @Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student {
+public class StudentDTO {
 
-  private UUID id;
   private String name;
   private String email;
   private LocalDate dateOfBirth;
   private int age;
   private List<Grade> listOfGrades;
 
-  public StudentDTO toDto() {
-    return StudentDTO.builder()
+  public Student toEntity() {
+    return Student.builder()
+        .id(UUID.randomUUID())
         .name(name)
         .email(email)
         .dateOfBirth(dateOfBirth)
