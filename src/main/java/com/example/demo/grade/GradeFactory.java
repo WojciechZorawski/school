@@ -7,7 +7,7 @@ public class GradeFactory {
 
   public static Grade gradeMaker() {
     Grade newGrade = Grade.builder()
-        .id(UUID.randomUUID())
+        .id(UUID.fromString("e09c2a63-2de3-4d07-9b4a-6072ad1561e6"))
         .date(LocalDate.of(2022, 2, 10))
         .grade(3)
         .subject("Jezyk polski")

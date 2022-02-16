@@ -6,24 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Builder
 @Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Grade {
+public class GradeDTO {
 
-  private UUID id;
   private LocalDate date;
   private int grade;
   private String subject;
 
-  public GradeDTO toDto() {
-    return GradeDTO.builder()
+  public Grade toEntity() {
+    return Grade.builder()
+        .id(UUID.randomUUID())
         .date(date)
         .grade(grade)
         .subject(subject)
