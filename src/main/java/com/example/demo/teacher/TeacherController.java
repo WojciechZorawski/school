@@ -24,7 +24,6 @@ public class TeacherController {
   public TeacherDTO getTeacherById(@PathVariable UUID id) {
     TeacherDTO teacher = teacherService.getTeacherById(id);
     return teacher;
-
   }
 
   @GetMapping("/list")
