@@ -13,7 +13,7 @@ public class StudentFactory {
 
   public static Student studentMaker() {
     Student newStudent = Student.builder()
-        .id(UUID.randomUUID())
+        .id(UUID.fromString("043b6ffc-d963-4a00-99ac-4a2d6738dce0"))
         .name("Wojtek")
         .email("jakisemail@pl")
         .dateOfBirth(LocalDate.of(2022, Month.APRIL, 11))
