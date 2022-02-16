@@ -12,13 +12,12 @@ public class TeacherService {
   TeacherRepositoryFaker teacherRepository = new TeacherRepositoryFaker();
 
   public TeacherDTO getTeacherById(UUID id) {
-    Teacher takenTeacher;
     try {
-      takenTeacher = teacherRepository.findById(id);
+      Teacher takenTeacher = teacherRepository.findById(id);
+      return takenTeacher.toDto();
     } catch (ClassNotFoundException e) {
       throw new BusinessLogicException("Bledne id");
     }
-    return takenTeacher.toDto();
   }
 
   public List<TeacherDTO> getAllTeachers() {
@@ -38,19 +37,17 @@ public class TeacherService {
   }
 
   public TeacherDTO updateTeacher(UUID id, String lastName, int age) {
-    Teacher updatedTeacher = null;
     try {
-      updatedTeacher = teacherRepository.findById(id);
+      Teacher updatedTeacher = teacherRepository.findById(id);
+      updatedTeacher.setLastName(lastName);
+      updatedTeacher.setAge(age);
+      return updatedTeacher.toDto();
     } catch (ClassNotFoundException e) {
       throw new BusinessLogicException("Bledne id");
     }
-    updatedTeacher.setLastName(lastName);
-    updatedTeacher.setAge(age);
-    return updatedTeacher.toDto();
-
   }
 
-  public void deleteTeacher(UUID id){
+  public void deleteTeacher(UUID id) {
     teacherRepository.deleteById(id);
   }
 
