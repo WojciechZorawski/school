@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class StudentRepositoryFaker {
+class StudentRepositoryFaker {
 
   public List<Student> students = new ArrayList<>();
 
@@ -24,9 +24,9 @@ public class StudentRepositoryFaker {
 
   public Student findById(UUID id) throws ClassNotFoundException {
     Student student = students.stream()
-        .filter(s -> s.getId().equals(id))
-        .findFirst()
-        .orElseThrow(() -> new ClassNotFoundException("Nie ma takiego studenta"));
+                              .filter(s -> s.getId().equals(id))
+                              .findFirst()
+                              .orElseThrow(() -> new ClassNotFoundException("Nie ma takiego studenta"));
     return student;
   }
 
@@ -37,13 +37,13 @@ public class StudentRepositoryFaker {
   }
 
   public void deleteById(UUID id) {
-    Student deletedStudent;
     try {
-      deletedStudent = findById(id);
+      Student deletedStudent = findById(id);
+      students.remove(deletedStudent);
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Bledne id");
     }
-    students.remove(deletedStudent);
+
   }
 
 }

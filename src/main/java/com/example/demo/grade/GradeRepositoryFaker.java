@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GradeRepositoryFaker {
+class GradeRepositoryFaker {
 
   public static List<Grade> grades = new ArrayList<>();
 
