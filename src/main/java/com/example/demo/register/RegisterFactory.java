@@ -13,7 +13,7 @@ public class RegisterFactory {
 
   public static Register registerMaker() {
     Register newRegister = Register.builder()
-        .id(UUID.randomUUID())
+        .id(UUID.fromString("79e7aa55-ba54-4206-8f08-cb5b50e63b3a"))
         .teacher(teacherMaker())
         .listOfStudents(List.of(studentMaker(), student2Maker(), student3Maker()))
         .build();

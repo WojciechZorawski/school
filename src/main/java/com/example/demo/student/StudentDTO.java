@@ -26,26 +26,19 @@ public class StudentDTO {
   private List<GradeDTO> listOfGrades;
 
   public Student toEntity() {
-    List<Grade> list = null;
-    if (listOfGrades != null) {
-      list = listOfGrades.stream()
-          .map(grade -> grade.toEntity())
-          .collect(Collectors.toList());
-    }
-
-//    List<Grade> list = listOfGrades != null
-//        ? listOfGrades.stream()
-//                      .map(grade -> grade.toEntity())
-//                      .collect(Collectors.toList())
-//        : null;
-
+    List<Grade> list = listOfGrades != null
+        ? listOfGrades.stream()
+                      .map(grade -> grade.toEntity())
+                      .collect(Collectors.toList())
+        : null;
     return Student.builder()
-        .id(UUID.randomUUID())
-        .name(name)
-        .email(email)
-        .dateOfBirth(dateOfBirth)
-        .age(age)
-        .listOfGrades(list)
-        .build();
+                  .id(UUID.randomUUID())
+                  .name(name)
+                  .email(email)
+                  .dateOfBirth(dateOfBirth)
+                  .age(age)
+                  .listOfGrades(list)
+                  .build();
   }
+
 }
