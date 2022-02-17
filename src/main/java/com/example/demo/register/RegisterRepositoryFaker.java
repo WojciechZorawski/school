@@ -6,7 +6,7 @@ import static com.example.demo.register.RegisterFactory.registerMaker;
 import java.util.List;
 import java.util.UUID;
 
-public class RegisterRepositoryFaker {
+class RegisterRepositoryFaker {
 
   public static List<Register> registers = List.of(registerMaker(), register2Maker());
 
