@@ -31,8 +31,8 @@ public class StudentService {
 
   public List<StudentDTO> getAllStudents() {
     List<StudentDTO> takenStudents = studentRepositoryFaker.findAll().stream()
-        .map(student -> student.toDto())
-        .collect(Collectors.toList());
+                                                           .map(student -> student.toDto())
+                                                           .collect(Collectors.toList());
     return takenStudents;
   }
 

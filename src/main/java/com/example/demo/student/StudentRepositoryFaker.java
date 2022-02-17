@@ -24,9 +24,9 @@ class StudentRepositoryFaker {
 
   public Student findById(UUID id) throws ClassNotFoundException {
     Student student = students.stream()
-        .filter(s -> s.getId().equals(id))
-        .findFirst()
-        .orElseThrow(() -> new ClassNotFoundException("Nie ma takiego studenta"));
+                              .filter(s -> s.getId().equals(id))
+                              .findFirst()
+                              .orElseThrow(() -> new ClassNotFoundException("Nie ma takiego studenta"));
     return student;
   }
 
@@ -37,13 +37,13 @@ class StudentRepositoryFaker {
   }
 
   public void deleteById(UUID id) {
-    Student deletedStudent;
     try {
-      deletedStudent = findById(id);
+      Student deletedStudent = findById(id);
+      students.remove(deletedStudent);
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Bledne id");
     }
-    students.remove(deletedStudent);
+
   }
 
 }

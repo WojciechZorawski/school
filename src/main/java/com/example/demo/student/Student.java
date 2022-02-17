@@ -29,19 +29,18 @@ public class Student {
   private List<Grade> listOfGrades;
 
   public StudentDTO toDto() {
-    List<GradeDTO> list = null;
-    if (listOfGrades != null) {
-      list = listOfGrades.stream()
-          .map(grade -> grade.toDto())
-          .collect(Collectors.toList());
-    }
+    List<GradeDTO> list = listOfGrades != null
+        ? listOfGrades.stream()
+                      .map(grade -> grade.toDto())
+                      .collect(Collectors.toList())
+        : null;
     return StudentDTO.builder()
-        .name(name)
-        .email(email)
-        .dateOfBirth(dateOfBirth)
-        .age(age)
-        .listOfGrades(list)
-        .build();
+                     .name(name)
+                     .email(email)
+                     .dateOfBirth(dateOfBirth)
+                     .age(age)
+                     .listOfGrades(list)
+                     .build();
   }
 
 }
