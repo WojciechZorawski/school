@@ -1,8 +1,7 @@
 package com.example.demo.register;
 
 import com.example.demo.student.Student;
-import com.example.demo.student.StudentDTO;
-import com.example.demo.teacher.Teacher;
+import com.example.demo.student.StudentRequestDTO;
 import com.example.demo.teacher.TeacherDTO;
 import java.util.List;
 import java.util.UUID;
@@ -18,10 +17,10 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+public class RegisterRequestDTO {
 
   private TeacherDTO teacher;
-  private List<StudentDTO> listOfStudents;
+  private List<StudentRequestDTO> listOfStudents;
 
   public Register toEntity() {
     List<Student> list = listOfStudents != null

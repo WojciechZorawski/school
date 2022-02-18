@@ -1,7 +1,8 @@
 package com.example.demo.register;
 
 import com.example.demo.exception.BusinessLogicException;
-import com.example.demo.student.StudentDTO;
+import com.example.demo.student.StudentRequestDTO;
+import com.example.demo.student.StudentResponseDTO;
 import com.example.demo.student.StudentService;
 import com.example.demo.teacher.TeacherDTO;
 import java.util.List;
@@ -21,7 +22,7 @@ public class RegisterService {
     this.studentService = studentService;
   }
 
-  public RegisterDTO getRegisterById(UUID id) {
+  public RegisterResponseDTO getRegisterById(UUID id) {
     try {
       Register takenRegister = registerRepositoryFaker.findById(id);
       return takenRegister.toDto();
@@ -30,20 +31,20 @@ public class RegisterService {
     }
   }
 
-  public List<RegisterDTO> getAllRegisters() {
-    List<RegisterDTO> takenRegisters = registerRepositoryFaker.findAll().stream()
-                                                              .map(register -> register.toDto())
-                                                              .collect(Collectors.toList());
+  public List<RegisterResponseDTO> getAllRegisters() {
+    List<RegisterResponseDTO> takenRegisters = registerRepositoryFaker.findAll().stream()
+                                                                     .map(register -> register.toDto())
+                                                                     .collect(Collectors.toList());
     return takenRegisters;
 
   }
 
-  public RegisterDTO createRegister(RegisterDTO newRegister) {
+  public RegisterResponseDTO createRegister(RegisterRequestDTO newRegister) {
     try {
-      List<StudentDTO> listOfStudents = newRegister.getListOfStudents();
+      List<StudentRequestDTO> listOfStudents = newRegister.getListOfStudents();
       if (listOfStudents != null) {
         listOfStudents.stream()
-                      .forEach(StudentDTO -> studentService.createStudent(StudentDTO));
+                      .forEach(StudentRequestDTO -> studentService.createStudent(StudentRequestDTO));
       }
       Register save = registerRepositoryFaker.save(newRegister.toEntity());
       return save.toDto();
@@ -52,7 +53,7 @@ public class RegisterService {
     }
   }
 
-  public RegisterDTO updateRegistersTeacher(UUID id, TeacherDTO teacher) {
+  public RegisterResponseDTO updateRegistersTeacher(UUID id, TeacherDTO teacher) {
     try {
       Register updatedRegister = registerRepositoryFaker.findById(id);
       updatedRegister.setTeacher(teacher.toEntity());
@@ -63,9 +64,9 @@ public class RegisterService {
 
   }
 
-  public RegisterDTO addStudentToRegister(UUID id, List<StudentDTO> newStudent) {
+  public RegisterResponseDTO addStudentToRegister(UUID id, List<StudentRequestDTO> newStudent) {
     newStudent.forEach(studentDTO -> studentService.createStudent(studentDTO));
-    List<StudentDTO> allStudents = studentService.getAllStudents();
+    List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
     try {
       updatedRegister = registerRepositoryFaker.findById(id);
@@ -73,14 +74,15 @@ public class RegisterService {
       throw new BusinessLogicException("Bledne id");
     }
     updatedRegister.setListOfStudents(allStudents.stream()
+                                                 .map(s -> s.toRequestDto())
                                                  .map(s -> s.toEntity())
                                                  .collect(Collectors.toList()));
     return updatedRegister.toDto();
   }
 
-  public RegisterDTO removeStudentFromRegister(UUID registerId, List<UUID> studentId) {
+  public RegisterResponseDTO removeStudentFromRegister(UUID registerId, List<UUID> studentId) {
     studentId.forEach(id -> studentService.deleteStudent(id));
-    List<StudentDTO> allStudents = studentService.getAllStudents();
+    List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
     try {
       updatedRegister = registerRepositoryFaker.findById(registerId);
@@ -88,6 +90,7 @@ public class RegisterService {
       throw new BusinessLogicException("Bledne id");
     }
     updatedRegister.setListOfStudents(allStudents.stream()
+                                                 .map(s -> s.toRequestDto())
                                                  .map(s -> s.toEntity())
                                                  .collect(Collectors.toList()));
     return updatedRegister.toDto();
@@ -97,16 +100,16 @@ public class RegisterService {
     registerRepositoryFaker.deleteById(id);
   }
 
-  private RegisterDTO getRegisterByTeacherId(UUID teacherId) {
-    RegisterDTO registerDto = registerRepositoryFaker.findyByTeacherId(teacherId)
-                                                     .orElseThrow(() -> new BusinessLogicException("Bledne id"))
-                                                     .toDto();
-    return registerDto;
+  private RegisterResponseDTO getRegisterByTeacherId(UUID teacherId) {
+    RegisterResponseDTO registerResponseDto = registerRepositoryFaker.findyByTeacherId(teacherId)
+                                                                   .orElseThrow(() -> new BusinessLogicException("Bledne id"))
+                                                                   .toDto();
+    return registerResponseDto;
   }
 
-  public List<StudentDTO> getStudentsByTeacherId(UUID teacherId) {
-    RegisterDTO registerDto = getRegisterByTeacherId(teacherId);
-    List<StudentDTO> list = registerDto.getListOfStudents();
+  public List<StudentResponseDTO> getStudentsByTeacherId(UUID teacherId) {
+    RegisterResponseDTO registerResponseDto = getRegisterByTeacherId(teacherId);
+    List<StudentResponseDTO> list = registerResponseDto.getListOfStudents();
     return list;
   }
 }

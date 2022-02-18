@@ -21,26 +21,26 @@ public class StudentController {
   private final StudentService studentService;
 
   @GetMapping("/{id}")
-  public StudentDTO getStudentById(@PathVariable UUID id) {
-    StudentDTO student = studentService.getStudentById(id);
+  public StudentResponseDTO getStudentById(@PathVariable UUID id) {
+    StudentResponseDTO student = studentService.getStudentById(id);
     return student;
   }
 
   @GetMapping("/list")
-  public List<StudentDTO> getAllStudents() {
-    List<StudentDTO> students = studentService.getAllStudents();
+  public List<StudentResponseDTO> getAllStudents() {
+    List<StudentResponseDTO> students = studentService.getAllStudents();
     return students;
   }
 
   @PostMapping
-  public StudentDTO createStudent(@RequestBody StudentDTO newStudent) {
-    StudentDTO createdStudent = studentService.createStudent(newStudent);
+  public StudentResponseDTO createStudent(@RequestBody final StudentRequestDTO newStudent) {
+    StudentResponseDTO createdStudent = studentService.createStudent(newStudent);
     return createdStudent;
   }
 
   @PutMapping("/{id}")
-  public StudentDTO updateStudent(@PathVariable UUID id, @RequestParam String name, @RequestParam String email) {
-    StudentDTO updatedStudent = studentService.updateStudent(id, name, email);
+  public StudentResponseDTO updateStudent(@PathVariable UUID id, @RequestParam String name, @RequestParam String email) {
+    StudentResponseDTO updatedStudent = studentService.updateStudent(id, name, email);
     return updatedStudent;
   }
 
