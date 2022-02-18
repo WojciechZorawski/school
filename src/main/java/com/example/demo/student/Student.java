@@ -2,6 +2,7 @@ package com.example.demo.student;
 
 import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeDTO;
+import com.example.demo.utils.Sex;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -28,19 +29,21 @@ public class Student {
   private int age;
   private List<Grade> listOfGrades;
 
-  public StudentDTO toDto() {
+  public StudentResponseDTO toResponseDto() {
+    Sex setSex = name.endsWith("a") ? Sex.F : Sex.M;
     List<GradeDTO> list = listOfGrades != null
         ? listOfGrades.stream()
                       .map(grade -> grade.toDto())
                       .collect(Collectors.toList())
         : null;
-    return StudentDTO.builder()
-                     .name(name)
-                     .email(email)
-                     .dateOfBirth(dateOfBirth)
-                     .age(age)
-                     .listOfGrades(list)
-                     .build();
+    return StudentResponseDTO.builder()
+                            .name(name)
+                            .email(email)
+                            .dateOfBirth(dateOfBirth)
+                            .age(age)
+                            .listOfGrades(list)
+                            .sex(setSex)
+                            .build();
   }
 
 }
