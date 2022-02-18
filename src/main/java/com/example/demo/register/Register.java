@@ -1,7 +1,8 @@
 package com.example.demo.register;
 
 import com.example.demo.student.Student;
-import com.example.demo.student.StudentDTO;
+import com.example.demo.student.StudentRequestDTO;
+import com.example.demo.student.StudentResponseDTO;
 import com.example.demo.teacher.Teacher;
 import java.util.List;
 import java.util.UUID;
@@ -26,16 +27,16 @@ public class Register {
   private Teacher teacher;
   private List<Student> listOfStudents;
 
-  public RegisterDTO toDto() {
-    List<StudentDTO> list = listOfStudents != null
+  public RegisterResponseDTO toDto() {
+    List<StudentResponseDTO> list = listOfStudents != null
         ? listOfStudents.stream()
-                        .map(student -> student.toDto())
+                        .map(student -> student.toResponseDto())
                         .collect(Collectors.toList())
         : null;
-    return RegisterDTO.builder()
-                      .teacher(teacher.toDto())
-                      .listOfStudents(list)
-                      .build();
+    return RegisterResponseDTO.builder()
+                             .teacher(teacher.toDto())
+                             .listOfStudents(list)
+                             .build();
   }
 
 }
