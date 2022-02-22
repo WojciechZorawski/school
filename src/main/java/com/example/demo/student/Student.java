@@ -1,5 +1,6 @@
 package com.example.demo.student;
 
+import com.example.demo.exception.BusinessLogicException;
 import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeDTO;
 import com.example.demo.utils.Sex;
@@ -36,14 +37,20 @@ public class Student {
                       .map(grade -> grade.toDto())
                       .collect(Collectors.toList())
         : null;
+    Double average = listOfGrades != null
+        ? listOfGrades.stream()
+                      .mapToDouble(grade -> grade.getGrade())
+                      .average().orElseThrow(() -> new BusinessLogicException("Bledne dane"))
+        : null;
     return StudentResponseDTO.builder()
-                            .name(name)
-                            .email(email)
-                            .dateOfBirth(dateOfBirth)
-                            .age(age)
-                            .listOfGrades(list)
-                            .sex(setSex)
-                            .build();
+                             .name(name)
+                             .email(email)
+                             .dateOfBirth(dateOfBirth)
+                             .age(age)
+                             .listOfGrades(list)
+                             .average(average)
+                             .sex(setSex)
+                             .build();
   }
 
 }

@@ -4,7 +4,6 @@ import com.example.demo.grade.GradeDTO;
 import com.example.demo.utils.Sex;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +22,7 @@ public class StudentResponseDTO {
   private LocalDate dateOfBirth;
   private int age;
   private List<GradeDTO> listOfGrades;
+  private Double average;
   private Sex sex;
 
   public StudentRequestDTO toRequestDto(){
