@@ -44,7 +44,7 @@ class RegisterRepositoryFaker {
 
   }
 
-  public Optional<Register> findyByTeacherId(UUID teacherId){
+  public Optional<Register> findByTeacherId(UUID teacherId){
     Optional<Register> wantedRegister = registers.stream()
         .filter(register -> register.getTeacher().getId().equals(teacherId))
         .findFirst();

@@ -33,8 +33,8 @@ public class RegisterService {
 
   public List<RegisterResponseDTO> getAllRegisters() {
     List<RegisterResponseDTO> takenRegisters = registerRepositoryFaker.findAll().stream()
-                                                                     .map(register -> register.toDto())
-                                                                     .collect(Collectors.toList());
+                                                                      .map(register -> register.toDto())
+                                                                      .collect(Collectors.toList());
     return takenRegisters;
 
   }
@@ -43,8 +43,8 @@ public class RegisterService {
     try {
       List<StudentRequestDTO> listOfStudents = newRegister.getListOfStudents();
       if (listOfStudents != null) {
-        listOfStudents.stream()
-                      .forEach(StudentRequestDTO -> studentService.createStudent(StudentRequestDTO));
+        listOfStudents
+            .forEach(StudentRequestDTO -> studentService.createStudent(StudentRequestDTO));
       }
       Register save = registerRepositoryFaker.save(newRegister.toEntity());
       return save.toDto();
@@ -59,8 +59,8 @@ public class RegisterService {
       updatedRegister.setTeacher(teacher.toEntity());
       return updatedRegister.toDto();
     } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Bledne id");
     }
-    throw new BusinessLogicException("Bledne id");
 
   }
 
@@ -101,9 +101,9 @@ public class RegisterService {
   }
 
   private RegisterResponseDTO getRegisterByTeacherId(UUID teacherId) {
-    RegisterResponseDTO registerResponseDto = registerRepositoryFaker.findyByTeacherId(teacherId)
-                                                                   .orElseThrow(() -> new BusinessLogicException("Bledne id"))
-                                                                   .toDto();
+    RegisterResponseDTO registerResponseDto = registerRepositoryFaker.findByTeacherId(teacherId)
+                                                                     .orElseThrow(() -> new BusinessLogicException("Bledne id"))
+                                                                     .toDto();
     return registerResponseDto;
   }
 
