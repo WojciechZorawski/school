@@ -25,6 +25,7 @@ public class Student {
 
   private UUID id;
   private String name;
+  private String lastName;
   private String email;
   private LocalDate dateOfBirth;
   private int age;
@@ -44,6 +45,7 @@ public class Student {
         : null;
     return StudentResponseDTO.builder()
                              .name(name)
+                             .lastName(lastName)
                              .email(email)
                              .dateOfBirth(dateOfBirth)
                              .age(age)

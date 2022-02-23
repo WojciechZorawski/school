@@ -1,5 +1,6 @@
 package com.example.demo.register;
 
+import static com.example.demo.register.RegisterFactory.register2Maker;
 import static com.example.demo.register.RegisterFactory.registerMaker;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ class RegisterRepositoryFaker {
 
   public RegisterRepositoryFaker() {
     registers.add(registerMaker());
-    registers.add(registerMaker());
+    registers.add(register2Maker());
   }
 
   public List<Register> findAll() {

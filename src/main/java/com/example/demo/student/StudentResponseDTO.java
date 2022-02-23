@@ -18,6 +18,7 @@ import lombok.ToString;
 public class StudentResponseDTO {
 
   private String name;
+  private String lastName;
   private String email;
   private LocalDate dateOfBirth;
   private int age;
@@ -25,14 +26,15 @@ public class StudentResponseDTO {
   private Double average;
   private Sex sex;
 
-  public StudentRequestDTO toRequestDto(){
+  public StudentRequestDTO toRequestDto() {
     return StudentRequestDTO.builder()
-                             .name(name)
-                             .email(email)
-                             .dateOfBirth(dateOfBirth)
-                             .age(age)
-                             .listOfGrades(listOfGrades)
-                             .build();
+                            .name(name)
+                            .lastName(lastName)
+                            .email(email)
+                            .dateOfBirth(dateOfBirth)
+                            .age(age)
+                            .listOfGrades(listOfGrades)
+                            .build();
   }
 }
 
