@@ -4,6 +4,7 @@ import com.example.demo.student.StudentRequestDTO;
 import com.example.demo.student.StudentResponseDTO;
 import com.example.demo.teacher.TeacherDTO;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +41,12 @@ public class RegisterController {
     return list;
   }
 
+  @GetMapping("/average/{registerId}")
+  public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(@PathVariable UUID registerId) {
+    Map<String, List<Map<String, Double>>> studentsFromRegisterWithAverage = registerService.getStudentsFromRegisterWithAverage(registerId);
+    return studentsFromRegisterWithAverage;
+  }
+
   @PostMapping
   public RegisterResponseDTO createRegister(@RequestBody RegisterRequestDTO newRegister) {
     RegisterResponseDTO createdRegister = registerService.createRegister(newRegister);
@@ -65,7 +72,7 @@ public class RegisterController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteRegister(@PathVariable UUID id){
+  public void deleteRegister(@PathVariable UUID id) {
     registerService.deleteById(id);
   }
 }

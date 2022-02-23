@@ -1,6 +1,7 @@
 package com.example.demo.student;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,12 @@ public class StudentController {
   public List<StudentResponseDTO> getAllStudents() {
     List<StudentResponseDTO> students = studentService.getAllStudents();
     return students;
+  }
+
+  @GetMapping("/average/{studentId}")
+  public Map<String, Double> getStudentWithAverage(@PathVariable UUID studentId){
+    Map<String, Double> studentWithAverage = studentService.getStudentWithAverage(studentId);
+    return studentWithAverage;
   }
 
   @PostMapping
