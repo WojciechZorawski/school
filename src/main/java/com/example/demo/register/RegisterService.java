@@ -1,11 +1,15 @@
 package com.example.demo.register;
 
 import com.example.demo.exception.BusinessLogicException;
+import com.example.demo.student.Student;
 import com.example.demo.student.StudentRequestDTO;
 import com.example.demo.student.StudentResponseDTO;
 import com.example.demo.student.StudentService;
+import com.example.demo.teacher.Teacher;
 import com.example.demo.teacher.TeacherDTO;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +28,8 @@ public class RegisterService {
 
   public RegisterResponseDTO getRegisterById(UUID id) {
     try {
-      Register takenRegister = registerRepositoryFaker.findById(id);
-      return takenRegister.toDto();
+      RegisterResponseDTO takenRegister = findRegister(id).toDto();
+      return takenRegister;
     } catch (ClassNotFoundException e) {
       throw new BusinessLogicException("Bledne id");
     }
@@ -55,7 +59,7 @@ public class RegisterService {
 
   public RegisterResponseDTO updateRegistersTeacher(UUID id, TeacherDTO teacher) {
     try {
-      Register updatedRegister = registerRepositoryFaker.findById(id);
+      Register updatedRegister = findRegister(id);
       updatedRegister.setTeacher(teacher.toEntity());
       return updatedRegister.toDto();
     } catch (ClassNotFoundException e) {
@@ -69,7 +73,7 @@ public class RegisterService {
     List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
     try {
-      updatedRegister = registerRepositoryFaker.findById(id);
+      updatedRegister = findRegister(id);
     } catch (ClassNotFoundException e) {
       throw new BusinessLogicException("Bledne id");
     }
@@ -85,7 +89,7 @@ public class RegisterService {
     List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
     try {
-      updatedRegister = registerRepositoryFaker.findById(registerId);
+      updatedRegister = findRegister(registerId);
     } catch (ClassNotFoundException e) {
       throw new BusinessLogicException("Bledne id");
     }
@@ -112,4 +116,35 @@ public class RegisterService {
     List<StudentResponseDTO> list = registerResponseDto.getListOfStudents();
     return list;
   }
+
+  private Register findRegister(UUID registerId) throws ClassNotFoundException {
+    Register takenRegister = registerRepositoryFaker.findById(registerId);
+    return takenRegister;
+  }
+
+  public List<Map<String, Double>> getStudentsWithAverageList(List<Student> studentsList) {
+    List<Map<String, Double>> studentsWithAverageList = studentsList.stream()
+                                                                    .map(student -> student.getId())
+                                                                    .map(studentId -> studentService.getStudentWithAverage(studentId))
+                                                                    .collect(Collectors.toList());
+    return studentsWithAverageList;
+  }
+
+  public String getTeacherFullName(Teacher teacher) {
+    String teacherFullName = teacher.getName() + " " + teacher.getLastName();
+    return teacherFullName;
+  }
+
+  public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(UUID registerId) {
+    try {
+      Register takenRegister = findRegister(registerId);
+      List<Student> takenStudents = takenRegister.getListOfStudents();
+      Map<String, List<Map<String, Double>>> studentsFromRegister = new HashMap<>();
+      studentsFromRegister.put(getTeacherFullName(takenRegister.getTeacher()), getStudentsWithAverageList(takenStudents));
+      return studentsFromRegister;
+    } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Bledne id");
+    }
+  }
+
 }

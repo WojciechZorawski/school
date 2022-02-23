@@ -3,7 +3,9 @@ package com.example.demo.student;
 import com.example.demo.exception.BusinessLogicException;
 import com.example.demo.grade.GradeDTO;
 import com.example.demo.grade.GradeService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -34,8 +36,8 @@ public class StudentService {
 
   public List<StudentResponseDTO> getAllStudents() {
     List<StudentResponseDTO> takenStudents = studentRepositoryFaker.findAll().stream()
-                                                                  .map(student -> student.toResponseDto())
-                                                                  .collect(Collectors.toList());
+                                                                   .map(student -> student.toResponseDto())
+                                                                   .collect(Collectors.toList());
     return takenStudents;
   }
 
@@ -66,6 +68,23 @@ public class StudentService {
 
   public void deleteStudent(UUID id) {
     studentRepositoryFaker.deleteById(id);
+  }
+
+  public Map<String, Double> getStudentWithAverage(UUID studentId) {
+    try {
+      Map<String, Double> studentWithAverage = new HashMap<>();
+      Student takenStudent = studentRepositoryFaker.findById(studentId);
+      studentWithAverage.put(takenStudent.getName() + " " + takenStudent.getLastName(),
+                             takenStudent
+                                 .getListOfGrades()
+                                 .stream()
+                                 .mapToDouble(grade -> grade.getGrade())
+                                 .average()
+                                 .orElseThrow(() -> new BusinessLogicException("Bledne dane")));
+      return studentWithAverage;
+    } catch (ClassNotFoundException e) {
+      throw new BusinessLogicException("Bledne id");
+    }
   }
 
 }
