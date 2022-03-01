@@ -2,6 +2,10 @@ package com.example.demo.grade;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +19,10 @@ import lombok.ToString;
 @NoArgsConstructor
 public class GradeDTO {
 
+  @PastOrPresent
   private LocalDate date;
+  @Min(1)
+  @Max(6)
   private int grade;
   private String subject;
 
