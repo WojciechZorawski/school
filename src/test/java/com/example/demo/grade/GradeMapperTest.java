@@ -1,6 +1,5 @@
 package com.example.demo.grade;
 
-import static com.example.demo.grade.GradeFactoryFaker.getInvalidGradeDto;
 import static com.example.demo.grade.GradeFactoryFaker.getValidGradeDto;
 import static com.example.demo.grade.GradeFactoryFaker.getValidGradeEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
