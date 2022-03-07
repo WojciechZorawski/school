@@ -1,6 +1,7 @@
 package com.example.demo.teacher;
 
 import static com.example.demo.teacher.TeacherFactoryFaker.getValidTeacherEntity;
+import static com.example.demo.teacher.TeacherFactoryFaker.toDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -55,7 +56,7 @@ public class TeacherServiceTest {
 
     when(teacherRepositoryFaker.save(any(Teacher.class))).thenReturn(newTeacher);
 
-    TeacherDTO createdTeacher = teacherService.createTeacher(newTeacher.toDto());
+    TeacherDTO createdTeacher = teacherService.createTeacher(toDto(newTeacher));
     assertEquals(newTeacher.getName(), createdTeacher.getName());
     assertEquals(newTeacher.getLastName(), createdTeacher.getLastName());
     assertEquals(newTeacher.getAge(), createdTeacher.getAge());

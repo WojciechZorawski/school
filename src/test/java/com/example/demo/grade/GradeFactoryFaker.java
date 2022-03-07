@@ -10,7 +10,15 @@ public class GradeFactoryFaker {
 
   private static final Faker FAKER = Faker.instance(new Random(81));
 
-  static GradeDTO getValidGradeDto() {
+  static GradeDTO toDto(Grade entity){
+    return GradeDTO.builder()
+        .date(entity.getDate())
+        .grade(entity.getGrade())
+        .subject(entity.getSubject())
+        .build();
+  }
+
+  public static GradeDTO getValidGradeDto() {
     return GradeDTO.builder()
                    .date(FAKER.date().past(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                    .grade(Integer.parseInt(FAKER.regexify("([1-6]){1}")))
@@ -18,7 +26,7 @@ public class GradeFactoryFaker {
                    .build();
   }
 
-  static Grade getValidGradeEntity() {
+  public static Grade getValidGradeEntity() {
     return Grade.builder()
                 .id(UUID.randomUUID())
                 .date(FAKER.date().past(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())

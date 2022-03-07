@@ -1,6 +1,7 @@
 package com.example.demo.grade;
 
 import static com.example.demo.grade.GradeFactoryFaker.getValidGradeEntity;
+import static com.example.demo.grade.GradeFactoryFaker.toDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -53,7 +54,7 @@ public class GradeServiceTest {
 
     when(gradeRepositoryFaker.save( any(Grade.class))).thenReturn(newGrade);
 
-    GradeDTO createdGrade = gradeService.createGrade(newGrade.toDto());
+    GradeDTO createdGrade = gradeService.createGrade(toDto(newGrade));
     assertEquals(newGrade.getDate(), createdGrade.getDate());
     assertEquals(newGrade.getGrade(), createdGrade.getGrade());
     assertEquals(newGrade.getSubject(), createdGrade.getSubject());
