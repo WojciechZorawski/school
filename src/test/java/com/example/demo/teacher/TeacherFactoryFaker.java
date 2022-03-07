@@ -8,6 +8,15 @@ public class TeacherFactoryFaker {
 
   private static final Faker FAKER = Faker.instance(new Random(81));
 
+  static TeacherDTO toDto(Teacher entity){
+    return TeacherDTO.builder()
+        .name(entity.getName())
+        .lastName(entity.getLastName())
+        .age(entity.getAge())
+        .profession(entity.getProfession())
+        .build();
+  }
+
   static TeacherDTO getValidTeacherDto() {
     return TeacherDTO.builder()
                      .name(FAKER.name().name())

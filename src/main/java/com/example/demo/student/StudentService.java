@@ -17,12 +17,18 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class StudentService {
 
-  StudentRepositoryFaker studentRepositoryFaker = new StudentRepositoryFaker();
+  private final StudentRepositoryFaker studentRepositoryFaker;
   private final GradeService gradeService;
 
   @Autowired
   public StudentService(GradeService gradeService) {
     this.gradeService = gradeService;
+    this.studentRepositoryFaker = new StudentRepositoryFaker();
+  }
+
+  public StudentService(@Autowired GradeService gradeService, StudentRepositoryFaker studentRepositoryFaker) {
+    this.gradeService = gradeService;
+    this.studentRepositoryFaker = studentRepositoryFaker;
   }
 
   public StudentResponseDTO getStudentById(UUID id) {
