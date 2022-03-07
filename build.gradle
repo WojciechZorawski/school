@@ -4,7 +4,6 @@ plugins {
   id 'java'
   id 'jacoco'
   id "org.sonarqube" version "3.0"
-  id 'checkstyle'
 }
 apply plugin: "org.sonarqube"
 

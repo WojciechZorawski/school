@@ -22,8 +22,8 @@ public class TeacherService {
 
   public List<TeacherDTO> getAllTeachers() {
     List<TeacherDTO> takenTeachers = teacherRepository.findAll().stream()
-        .map(teacher -> teacher.toDto())
-        .collect(Collectors.toList());
+                                                      .map(teacher -> teacher.toDto())
+                                                      .collect(Collectors.toList());
     return takenTeachers;
   }
 

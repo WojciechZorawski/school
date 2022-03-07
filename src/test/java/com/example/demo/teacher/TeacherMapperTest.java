@@ -1,18 +1,17 @@
 package com.example.demo.teacher;
 
-import static com.example.demo.teacher.TeacherFactoryFaker.getInvalidTeacherDto;
+import static com.example.demo.teacher.TeacherFactoryFaker.getValidTeacherDto;
 import static com.example.demo.teacher.TeacherFactoryFaker.getValidTeacherEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TeacherMapperTest {
 
   @Test
   void shouldMapDtoToEntity(){
-    TeacherDTO dto = getInvalidTeacherDto();
+    TeacherDTO dto = getValidTeacherDto();
     Teacher entity = dto.toEntity();
     assertEquals(dto.getName(), entity.getName());
     assertEquals(dto.getLastName(), entity.getLastName());
