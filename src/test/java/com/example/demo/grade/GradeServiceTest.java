@@ -4,6 +4,8 @@ import static com.example.demo.grade.GradeFactoryFaker.getValidGradeEntity;
 import static com.example.demo.grade.GradeFactoryFaker.toDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class GradeServiceTest {
+class GradeServiceTest {
 
   @InjectMocks
   private GradeService gradeService;
@@ -73,5 +75,13 @@ public class GradeServiceTest {
     assertEquals(gradeEntity.getDate(), updatedGrade.getDate());
     assertEquals(grade, updatedGrade.getGrade());
     assertEquals(subject, updatedGrade.getSubject());
+  }
+
+  @Test
+  void deleteGrade(){
+    Grade gradeEntity = getValidGradeEntity();
+    UUID id = gradeEntity.getId();
+    gradeService.deleteGrade(id);
+    verify(gradeRepositoryFaker, times(1)).deleteById(id);
   }
 }

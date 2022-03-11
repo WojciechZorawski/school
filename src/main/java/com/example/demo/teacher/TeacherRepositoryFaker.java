@@ -9,18 +9,18 @@ import java.util.UUID;
 
 class TeacherRepositoryFaker {
 
-  public List<Teacher> teachers = new ArrayList<>();
+  List<Teacher> teachers = new ArrayList<>();
 
-  public TeacherRepositoryFaker() {
+  TeacherRepositoryFaker() {
     teachers.add(teacherMaker());
     teachers.add(teacher2Maker());
   }
 
-  public List<Teacher> findAll() {
+  List<Teacher> findAll() {
     return teachers;
   }
 
-  public Teacher findById(UUID id) throws ClassNotFoundException {
+  Teacher findById(UUID id) throws ClassNotFoundException {
     Teacher foundTeacher = teachers.stream()
         .filter(n -> n.getId().equals(id))
         .findFirst()
@@ -29,14 +29,14 @@ class TeacherRepositoryFaker {
 
   }
 
-  public Teacher save(Teacher entity) throws ClassNotFoundException {
+  Teacher save(Teacher entity) throws ClassNotFoundException {
     teachers.add(entity);
     Teacher byId = findById(entity.getId());
     return byId;
 
   }
 
-  public void deleteById(UUID id) throws IllegalArgumentException {
+  void deleteById(UUID id) throws IllegalArgumentException {
     Teacher deletedTeacher;
     try {
       deletedTeacher = findById(id);

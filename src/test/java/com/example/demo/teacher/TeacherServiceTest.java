@@ -4,6 +4,8 @@ import static com.example.demo.teacher.TeacherFactoryFaker.getValidTeacherEntity
 import static com.example.demo.teacher.TeacherFactoryFaker.toDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class TeacherServiceTest {
+class TeacherServiceTest {
 
   @InjectMocks
   private TeacherService teacherService;
@@ -77,6 +79,14 @@ public class TeacherServiceTest {
     assertEquals(lastName, updatedTeacher.getLastName());
     assertEquals(age, updatedTeacher.getAge());
     assertEquals(teacherEntity.getProfession(), updatedTeacher.getProfession());
+  }
+
+  @Test
+  void deleteTeacher(){
+    Teacher teacherEntity = getValidTeacherEntity();
+    UUID id = teacherEntity.getId();
+    teacherService.deleteTeacher(id);
+    verify(teacherRepositoryFaker, times(1)).deleteById(id);
   }
 
 }

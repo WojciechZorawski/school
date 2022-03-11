@@ -11,7 +11,7 @@ public class GradeService {
 
   GradeRepositoryFaker gradeRepositoryFaker = new GradeRepositoryFaker();
 
-  public GradeDTO getGradeById(UUID id) {
+  GradeDTO getGradeById(UUID id) {
     try {
       Grade takenGrade = gradeRepositoryFaker.findById(id);
       return takenGrade.toDto();
@@ -21,7 +21,7 @@ public class GradeService {
 
   }
 
-  public List<GradeDTO> getAllGrades() {
+  List<GradeDTO> getAllGrades() {
     List<GradeDTO> takenGrades = gradeRepositoryFaker.findAll().stream()
         .map(grade -> grade.toDto())
         .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class GradeService {
     }
   }
 
-  public GradeDTO updateGrade(UUID id, int grade, String subject) {
+  GradeDTO updateGrade(UUID id, int grade, String subject) {
     try {
       Grade updatedGrade = gradeRepositoryFaker.findById(id);
       updatedGrade.setGrade(grade);
@@ -48,7 +48,7 @@ public class GradeService {
     }
   }
 
-  public void deleteGrade(UUID id) {
+  void deleteGrade(UUID id) {
     gradeRepositoryFaker.deleteById(id);
   }
 }

@@ -27,7 +27,7 @@ public class Register {
   private Teacher teacher;
   private List<Student> listOfStudents;
 
-  public RegisterResponseDTO toDto() {
+  RegisterResponseDTO toDto() {
     List<StudentResponseDTO> list = listOfStudents != null
         ? listOfStudents.stream()
                         .map(student -> student.toResponseDto())

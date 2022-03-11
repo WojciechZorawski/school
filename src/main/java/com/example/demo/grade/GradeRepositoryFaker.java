@@ -10,19 +10,19 @@ import java.util.UUID;
 
 class GradeRepositoryFaker {
 
-  public static List<Grade> grades = new ArrayList<>();
+  static List<Grade> grades = new ArrayList<>();
 
-  public GradeRepositoryFaker() {
+  GradeRepositoryFaker() {
     grades.add(gradeMaker());
     grades.add(grade2Maker());
     grades.add(grade3Maker());
   }
 
-  public List<Grade> findAll() {
+  List<Grade> findAll() {
     return grades;
   }
 
-  public Grade findById(UUID id) throws ClassNotFoundException {
+  Grade findById(UUID id) throws ClassNotFoundException {
     Grade foundGrade = grades.stream()
         .filter(o -> o.getId().equals(id))
         .findFirst()
@@ -30,13 +30,13 @@ class GradeRepositoryFaker {
     return foundGrade;
   }
 
-  public Grade save(Grade entity) throws ClassNotFoundException{
+  Grade save(Grade entity) throws ClassNotFoundException{
     grades.add(entity);
     Grade byId = findById(entity.getId());
     return byId;
   }
 
-  public void deleteById(UUID id) throws IllegalArgumentException{
+  void deleteById(UUID id) throws IllegalArgumentException{
     Grade deletedGrade;
     try {
       deletedGrade = findById(id);

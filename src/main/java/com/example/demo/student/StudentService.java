@@ -31,7 +31,7 @@ public class StudentService {
     this.studentRepositoryFaker = studentRepositoryFaker;
   }
 
-  public StudentResponseDTO getStudentById(UUID id) {
+  StudentResponseDTO getStudentById(UUID id) {
     try {
       Student takenStudent = studentRepositoryFaker.findById(id);
       return takenStudent.toResponseDto();
@@ -61,7 +61,7 @@ public class StudentService {
     }
   }
 
-  public StudentResponseDTO updateStudent(UUID id, String name, String email) {
+  StudentResponseDTO updateStudent(UUID id, String name, String email) {
     try {
       Student updatedStudent = studentRepositoryFaker.findById(id);
       updatedStudent.setName(name);
