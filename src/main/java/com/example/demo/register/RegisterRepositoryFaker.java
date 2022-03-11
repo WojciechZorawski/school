@@ -10,18 +10,18 @@ import java.util.UUID;
 
 class RegisterRepositoryFaker {
 
-  public List<Register> registers = new ArrayList<>();
+  List<Register> registers = new ArrayList<>();
 
-  public RegisterRepositoryFaker() {
+  RegisterRepositoryFaker() {
     registers.add(registerMaker());
     registers.add(register2Maker());
   }
 
-  public List<Register> findAll() {
+  List<Register> findAll() {
     return registers;
   }
 
-  public Register findById(UUID id) throws ClassNotFoundException {
+  Register findById(UUID id) throws ClassNotFoundException {
     Register register = registers.stream()
                                  .filter(r -> r.getId().equals(id))
                                  .findFirst()
@@ -29,13 +29,13 @@ class RegisterRepositoryFaker {
     return register;
   }
 
-  public Register save(Register entity) throws ClassNotFoundException {
+  Register save(Register entity) throws ClassNotFoundException {
     registers.add(entity);
     Register byId = findById(entity.getId());
     return byId;
   }
 
-  public void deleteById(UUID id) {
+  void deleteById(UUID id) {
     try {
       Register deletedRegister = findById(id);
       registers.remove(deletedRegister);
@@ -45,7 +45,7 @@ class RegisterRepositoryFaker {
 
   }
 
-  public Optional<Register> findByTeacherId(UUID teacherId){
+  Optional<Register> findByTeacherId(UUID teacherId){
     Optional<Register> wantedRegister = registers.stream()
         .filter(register -> register.getTeacher().getId().equals(teacherId))
         .findFirst();

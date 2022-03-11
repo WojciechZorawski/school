@@ -16,17 +16,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegisterService {
+class RegisterService {
 
-  RegisterRepositoryFaker registerRepositoryFaker = new RegisterRepositoryFaker();
+  private final RegisterRepositoryFaker registerRepositoryFaker;
   private final StudentService studentService;
 
   @Autowired
   public RegisterService(StudentService studentService) {
     this.studentService = studentService;
+    this.registerRepositoryFaker = new RegisterRepositoryFaker();
   }
 
-  public RegisterResponseDTO getRegisterById(UUID id) {
+  public RegisterService(@Autowired StudentService studentService, RegisterRepositoryFaker registerRepositoryFaker){
+    this.studentService = studentService;
+    this.registerRepositoryFaker = registerRepositoryFaker;
+  }
+
+  RegisterResponseDTO getRegisterById(UUID id) {
     try {
       RegisterResponseDTO takenRegister = findRegister(id).toDto();
       return takenRegister;
@@ -35,7 +41,7 @@ public class RegisterService {
     }
   }
 
-  public List<RegisterResponseDTO> getAllRegisters() {
+  List<RegisterResponseDTO> getAllRegisters() {
     List<RegisterResponseDTO> takenRegisters = registerRepositoryFaker.findAll().stream()
                                                                       .map(register -> register.toDto())
                                                                       .collect(Collectors.toList());
@@ -43,7 +49,7 @@ public class RegisterService {
 
   }
 
-  public RegisterResponseDTO createRegister(RegisterRequestDTO newRegister) {
+  RegisterResponseDTO createRegister(RegisterRequestDTO newRegister) {
     try {
       List<StudentRequestDTO> listOfStudents = newRegister.getListOfStudents();
       if (listOfStudents != null) {
@@ -57,7 +63,7 @@ public class RegisterService {
     }
   }
 
-  public RegisterResponseDTO updateRegistersTeacher(UUID id, TeacherDTO teacher) {
+  RegisterResponseDTO updateRegistersTeacher(UUID id, TeacherDTO teacher) {
     try {
       Register updatedRegister = findRegister(id);
       updatedRegister.setTeacher(teacher.toEntity());
@@ -68,7 +74,7 @@ public class RegisterService {
 
   }
 
-  public RegisterResponseDTO addStudentToRegister(UUID id, List<StudentRequestDTO> newStudent) {
+  RegisterResponseDTO addStudentToRegister(UUID id, List<StudentRequestDTO> newStudent) {
     newStudent.forEach(studentDTO -> studentService.createStudent(studentDTO));
     List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
@@ -84,7 +90,7 @@ public class RegisterService {
     return updatedRegister.toDto();
   }
 
-  public RegisterResponseDTO removeStudentFromRegister(UUID registerId, List<UUID> studentId) {
+  RegisterResponseDTO removeStudentFromRegister(UUID registerId, List<UUID> studentId) {
     studentId.forEach(id -> studentService.deleteStudent(id));
     List<StudentResponseDTO> allStudents = studentService.getAllStudents();
     Register updatedRegister;
@@ -100,7 +106,7 @@ public class RegisterService {
     return updatedRegister.toDto();
   }
 
-  public void deleteById(UUID id) {
+  void deleteById(UUID id) {
     registerRepositoryFaker.deleteById(id);
   }
 
@@ -111,10 +117,11 @@ public class RegisterService {
     return registerResponseDto;
   }
 
-  public List<StudentResponseDTO> getStudentsByTeacherId(UUID teacherId) {
+  List<StudentResponseDTO> getStudentsByTeacherId(UUID teacherId) {
     RegisterResponseDTO registerResponseDto = getRegisterByTeacherId(teacherId);
     List<StudentResponseDTO> list = registerResponseDto.getListOfStudents();
     return list;
+
   }
 
   private Register findRegister(UUID registerId) throws ClassNotFoundException {
@@ -122,7 +129,7 @@ public class RegisterService {
     return takenRegister;
   }
 
-  public List<Map<String, Double>> getStudentsWithAverageList(List<Student> studentsList) {
+  private List<Map<String, Double>> getStudentsWithAverageList(List<Student> studentsList) {
     List<Map<String, Double>> studentsWithAverageList = studentsList.stream()
                                                                     .map(student -> student.getId())
                                                                     .map(studentId -> studentService.getStudentWithAverage(studentId))
@@ -130,12 +137,12 @@ public class RegisterService {
     return studentsWithAverageList;
   }
 
-  public String getTeacherFullName(Teacher teacher) {
+  private String getTeacherFullName(Teacher teacher) {
     String teacherFullName = teacher.getName() + " " + teacher.getLastName();
     return teacherFullName;
   }
 
-  public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(UUID registerId) {
+  Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(UUID registerId) {
     try {
       Register takenRegister = findRegister(registerId);
       List<Student> takenStudents = takenRegister.getListOfStudents();

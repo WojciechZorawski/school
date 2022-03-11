@@ -9,9 +9,9 @@ import static com.example.demo.teacher.TeacherFactory.teacherMaker;
 import java.util.List;
 import java.util.UUID;
 
-public class RegisterFactory {
+class RegisterFactory {
 
-  public static Register registerMaker() {
+  static Register registerMaker() {
     Register newRegister = Register.builder()
         .id(UUID.fromString("79e7aa55-ba54-4206-8f08-cb5b50e63b3a"))
         .teacher(teacherMaker())
@@ -21,7 +21,7 @@ public class RegisterFactory {
 
   }
 
-  public static Register register2Maker() {
+  static Register register2Maker() {
     Register newRegister2 = Register.builder()
         .id(UUID.randomUUID())
         .teacher(teacher2Maker())

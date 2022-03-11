@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -32,6 +33,7 @@ public class StudentRequestDTO {
   @Min(18)
   @Max(40)
   private int age;
+  @Valid
   private List<GradeDTO> listOfGrades;
 
   public Student toEntity() {

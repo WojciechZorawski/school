@@ -2,20 +2,19 @@ package com.example.demo.student;
 
 import static com.example.demo.student.StudentFactoryFaker.getAverageFromDto;
 import static com.example.demo.student.StudentFactoryFaker.getAverageFromEntity;
-import static com.example.demo.student.StudentFactoryFaker.getKeyFromMap;
 import static com.example.demo.student.StudentFactoryFaker.getSex;
 import static com.example.demo.student.StudentFactoryFaker.getValidStudentEntity;
 import static com.example.demo.student.StudentFactoryFaker.getValidStudentRequestDto;
 import static com.example.demo.student.StudentFactoryFaker.toEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.demo.grade.GradeService;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -131,6 +130,14 @@ public class StudentServiceTest {
     Double value = firstEntry.getValue();
     assertEquals(entity.getName() + " " + entity.getLastName(), key);
     assertEquals(getAverageFromEntity(entity.getListOfGrades()), value);
+  }
+
+  @Test
+  void deleteStudent(){
+    Student studentEntity = getValidStudentEntity();
+    UUID id = studentEntity.getId();
+    studentService.deleteStudent(id);
+    verify(studentRepositoryFaker, times(1)).deleteById(id);
   }
 
 }

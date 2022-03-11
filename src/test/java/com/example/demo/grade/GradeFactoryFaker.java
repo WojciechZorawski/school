@@ -18,6 +18,15 @@ public class GradeFactoryFaker {
         .build();
   }
 
+  public static Grade toEntity(GradeDTO dto){
+    return Grade.builder()
+        .id(UUID.randomUUID())
+        .date(dto.getDate())
+        .grade(dto.getGrade())
+        .subject(dto.getSubject())
+        .build();
+  }
+
   public static GradeDTO getValidGradeDto() {
     return GradeDTO.builder()
                    .date(FAKER.date().past(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())

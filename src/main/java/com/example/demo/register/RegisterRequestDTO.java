@@ -6,6 +6,7 @@ import com.example.demo.teacher.TeacherDTO;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,12 +18,14 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequestDTO {
+class RegisterRequestDTO {
 
+  @Valid
   private TeacherDTO teacher;
+  @Valid
   private List<StudentRequestDTO> listOfStudents;
 
-  public Register toEntity() {
+  Register toEntity() {
     List<Student> list = listOfStudents != null
         ? listOfStudents.stream()
                         .map(student -> student.toEntity())
@@ -34,5 +37,4 @@ public class RegisterRequestDTO {
                    .listOfStudents(list)
                    .build();
   }
-
 }

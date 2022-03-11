@@ -10,19 +10,19 @@ import java.util.UUID;
 
 class StudentRepositoryFaker {
 
-  public List<Student> students = new ArrayList<>();
+  List<Student> students = new ArrayList<>();
 
-  public StudentRepositoryFaker() {
+  StudentRepositoryFaker() {
     students.add(studentMaker());
     students.add(student2Maker());
     students.add(student3Maker());
   }
 
-  public List<Student> findAll() {
+  List<Student> findAll() {
     return students;
   }
 
-  public Student findById(UUID id) throws ClassNotFoundException {
+  Student findById(UUID id) throws ClassNotFoundException {
     Student student = students.stream()
                               .filter(s -> s.getId().equals(id))
                               .findFirst()
@@ -30,13 +30,13 @@ class StudentRepositoryFaker {
     return student;
   }
 
-  public Student save(Student entity) throws ClassNotFoundException {
+  Student save(Student entity) throws ClassNotFoundException {
     students.add(entity);
     Student byId = findById(entity.getId());
     return byId;
   }
 
-  public void deleteById(UUID id) {
+  void deleteById(UUID id) {
     try {
       Student deletedStudent = findById(id);
       students.remove(deletedStudent);

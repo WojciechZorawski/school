@@ -8,7 +8,7 @@ public class TeacherFactoryFaker {
 
   private static final Faker FAKER = Faker.instance(new Random(81));
 
-  static TeacherDTO toDto(Teacher entity){
+  public static TeacherDTO toDto(Teacher entity){
     return TeacherDTO.builder()
         .name(entity.getName())
         .lastName(entity.getLastName())
@@ -17,7 +17,17 @@ public class TeacherFactoryFaker {
         .build();
   }
 
-  static TeacherDTO getValidTeacherDto() {
+  public static Teacher toEntity(TeacherDTO dto){
+    return Teacher.builder()
+        .id(UUID.randomUUID())
+        .name(dto.getName())
+        .lastName(dto.getLastName())
+        .age(dto.getAge())
+        .profession(dto.getProfession())
+        .build();
+  }
+
+  public static TeacherDTO getValidTeacherDto() {
     return TeacherDTO.builder()
                      .name(FAKER.name().name())
                      .lastName(FAKER.name().lastName())
@@ -26,7 +36,7 @@ public class TeacherFactoryFaker {
                      .build();
   }
 
-  static Teacher getValidTeacherEntity() {
+  public static Teacher getValidTeacherEntity() {
     return Teacher.builder()
                   .id(UUID.randomUUID())
                   .name(FAKER.name().name())
@@ -36,7 +46,7 @@ public class TeacherFactoryFaker {
                   .build();
   }
 
-  static TeacherDTO getInvalidTeacherDto() {
+  public static TeacherDTO getInvalidTeacherDto() {
     return TeacherDTO.builder()
                      .name(null)
                      .lastName(null)
