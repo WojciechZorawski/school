@@ -2,7 +2,6 @@ package com.example.demo.student;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ public class StudentController {
   private final StudentService studentService;
 
   @GetMapping("/{id}")
-  public StudentResponseDTO getStudentById(@PathVariable UUID id) {
+  public StudentResponseDTO getStudentById(@PathVariable Long id) {
     StudentResponseDTO student = studentService.getStudentById(id);
     return student;
   }
@@ -34,7 +33,7 @@ public class StudentController {
   }
 
   @GetMapping("/average/{studentId}")
-  public Map<String, Double> getStudentWithAverage(@PathVariable UUID studentId){
+  public Map<String, Double> getStudentWithAverage(@PathVariable Long studentId) {
     Map<String, Double> studentWithAverage = studentService.getStudentWithAverage(studentId);
     return studentWithAverage;
   }
@@ -46,13 +45,13 @@ public class StudentController {
   }
 
   @PutMapping("/{id}")
-  public StudentResponseDTO updateStudent(@PathVariable UUID id, @RequestParam String name, @RequestParam String email) {
+  public StudentResponseDTO updateStudent(@PathVariable Long id, @RequestParam String name, @RequestParam String email) {
     StudentResponseDTO updatedStudent = studentService.updateStudent(id, name, email);
     return updatedStudent;
   }
 
   @DeleteMapping("/{id}")
-  public void deleteStudent(@PathVariable UUID id) {
+  public void deleteStudent(@PathVariable Long id) {
     studentService.deleteStudent(id);
   }
 

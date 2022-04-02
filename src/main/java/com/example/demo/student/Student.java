@@ -1,44 +1,56 @@
 package com.example.demo.student;
 
+import com.example.demo.BaseEntity;
 import com.example.demo.exception.BusinessLogicException;
 import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeDTO;
 import com.example.demo.utils.Sex;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@Entity
+@Table(name = "student")
+@SuperBuilder
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student {
+public class Student extends BaseEntity {
 
-  private UUID id;
   private String name;
   private String lastName;
   private String email;
   private LocalDate dateOfBirth;
   private int age;
-  private List<Grade> listOfGrades;
+  @Default
+  @OneToMany
+  @JoinColumn(name = "student_id")
+  private List<Grade> listOfGrades = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private Sex sex;
 
   public StudentResponseDTO toResponseDto() {
     Sex setSex = name.endsWith("a") ? Sex.F : Sex.M;
-    List<GradeDTO> list = listOfGrades != null
+    List<GradeDTO> dtoList = listOfGrades != null
         ? listOfGrades.stream()
                       .map(grade -> grade.toDto())
                       .collect(Collectors.toList())
-        : null;
-    Double average = listOfGrades != null
+        : new ArrayList<>();
+    Double average = listOfGrades != null && !listOfGrades.isEmpty()
         ? listOfGrades.stream()
                       .mapToDouble(grade -> grade.getGrade())
                       .average().orElseThrow(() -> new BusinessLogicException("Bledne dane"))
@@ -49,10 +61,9 @@ public class Student {
                              .email(email)
                              .dateOfBirth(dateOfBirth)
                              .age(age)
-                             .listOfGrades(list)
+                             .listOfGrades(dtoList)
                              .average(average)
                              .sex(setSex)
                              .build();
   }
-
 }

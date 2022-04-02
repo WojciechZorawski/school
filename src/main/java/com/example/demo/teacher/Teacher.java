@@ -1,22 +1,23 @@
 package com.example.demo.teacher;
 
-import java.util.UUID;
+import com.example.demo.BaseEntity;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@Entity
+@Table(name = "teacher")
+@SuperBuilder
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Teacher {
+public class Teacher extends BaseEntity {
 
-  private UUID id;
   private String name;
   private String lastName;
   private int age;
@@ -24,11 +25,11 @@ public class Teacher {
 
   public TeacherDTO toDto() {
     return TeacherDTO.builder()
-        .name(name)
-        .lastName(lastName)
-        .age(age)
-        .profession(profession)
-        .build();
+                     .name(name)
+                     .lastName(lastName)
+                     .age(age)
+                     .profession(profession)
+                     .build();
 
   }
 

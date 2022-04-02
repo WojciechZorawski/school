@@ -5,7 +5,6 @@ import static com.example.demo.register.RegisterFactoryFaker.getValidRegisterReq
 import static com.example.demo.student.StudentFactoryFaker.getAverageFromEntity;
 import static com.example.demo.student.StudentFactoryFaker.getSex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -39,13 +38,17 @@ class RegisterMapperTest {
                                                                                                                     .getListOfGrades()
                                                                                                                     .get(0)
                                                                                                                     .getSubject());
-    assertNotNull(registerEntity.getId());
+    assertEquals(registerRequestDto.getListOfStudents().get(0).getListOfGrades().get(0).getDescription(), registerEntity.getListOfStudents()
+                                                                                                                        .get(0)
+                                                                                                                        .getListOfGrades()
+                                                                                                                        .get(0)
+                                                                                                                        .getDescription());
   }
 
   @Test
   void shouldMapEntityToResponseDto() {
     Register registerEntity = getValidRegisterEntity();
-    RegisterResponseDTO registerResponseDto = registerEntity.toDto();
+    RegisterResponseDTO registerResponseDto = registerEntity.toResponseDto();
     assertEquals(registerEntity.getTeacher().getName(), registerResponseDto.getTeacher().getName());
     assertEquals(registerEntity.getTeacher().getLastName(), registerResponseDto.getTeacher().getLastName());
     assertEquals(registerEntity.getTeacher().getAge(), registerResponseDto.getTeacher().getAge());
@@ -70,6 +73,11 @@ class RegisterMapperTest {
                                                                                                                      .getListOfGrades()
                                                                                                                      .get(0)
                                                                                                                      .getSubject());
+    assertEquals(registerEntity.getListOfStudents().get(0).getListOfGrades().get(0).getDescription(), registerResponseDto.getListOfStudents()
+                                                                                                                         .get(0)
+                                                                                                                         .getListOfGrades()
+                                                                                                                         .get(0)
+                                                                                                                         .getDescription());
     assertEquals(getSex(registerEntity.getListOfStudents().get(0).getName()), registerResponseDto.getListOfStudents().get(0).getSex());
     assertEquals(getAverageFromEntity(registerEntity.getListOfStudents().get(0).getListOfGrades()),
                  registerResponseDto.getListOfStudents().get(0).getAverage());

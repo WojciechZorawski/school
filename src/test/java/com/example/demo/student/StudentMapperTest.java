@@ -7,7 +7,6 @@ import static com.example.demo.student.StudentFactoryFaker.getValidStudentEntity
 import static com.example.demo.student.StudentFactoryFaker.getValidStudentRequestDto;
 import static com.example.demo.student.StudentFactoryFaker.getValidStudentResponseDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +24,6 @@ public class StudentMapperTest {
     assertEquals(studentRequestDto.getListOfGrades().get(0).getDate(), studentEntity.getListOfGrades().get(0).getDate());
     assertEquals(studentRequestDto.getListOfGrades().get(0).getGrade(), studentEntity.getListOfGrades().get(0).getGrade());
     assertEquals(studentRequestDto.getListOfGrades().get(0).getSubject(), studentEntity.getListOfGrades().get(0).getSubject());
-    assertNotNull(studentEntity.getId());
   }
 
   @Test

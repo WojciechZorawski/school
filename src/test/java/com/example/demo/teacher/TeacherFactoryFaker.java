@@ -2,29 +2,27 @@ package com.example.demo.teacher;
 
 import com.github.javafaker.Faker;
 import java.util.Random;
-import java.util.UUID;
 
 public class TeacherFactoryFaker {
 
   private static final Faker FAKER = Faker.instance(new Random(81));
 
-  public static TeacherDTO toDto(Teacher entity){
+  public static TeacherDTO toDto(Teacher entity) {
     return TeacherDTO.builder()
-        .name(entity.getName())
-        .lastName(entity.getLastName())
-        .age(entity.getAge())
-        .profession(entity.getProfession())
-        .build();
+                     .name(entity.getName())
+                     .lastName(entity.getLastName())
+                     .age(entity.getAge())
+                     .profession(entity.getProfession())
+                     .build();
   }
 
-  public static Teacher toEntity(TeacherDTO dto){
+  public static Teacher toEntity(TeacherDTO dto) {
     return Teacher.builder()
-        .id(UUID.randomUUID())
-        .name(dto.getName())
-        .lastName(dto.getLastName())
-        .age(dto.getAge())
-        .profession(dto.getProfession())
-        .build();
+                  .name(dto.getName())
+                  .lastName(dto.getLastName())
+                  .age(dto.getAge())
+                  .profession(dto.getProfession())
+                  .build();
   }
 
   public static TeacherDTO getValidTeacherDto() {
@@ -38,7 +36,7 @@ public class TeacherFactoryFaker {
 
   public static Teacher getValidTeacherEntity() {
     return Teacher.builder()
-                  .id(UUID.randomUUID())
+                  .id(1L)
                   .name(FAKER.name().name())
                   .lastName(FAKER.name().lastName())
                   .age(FAKER.number().numberBetween(18, 99))

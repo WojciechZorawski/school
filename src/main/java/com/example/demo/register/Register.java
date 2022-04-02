@@ -1,42 +1,59 @@
 package com.example.demo.register;
 
+import com.example.demo.BaseEntity;
 import com.example.demo.student.Student;
-import com.example.demo.student.StudentRequestDTO;
 import com.example.demo.student.StudentResponseDTO;
 import com.example.demo.teacher.Teacher;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@Entity
+@Table(name = "register")
+@SuperBuilder
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+public class Register extends BaseEntity {
 
-public class Register {
-
-  private UUID id;
+  @ManyToOne
+  @JoinColumn(name = "teacher_id", referencedColumnName = "id")
   private Teacher teacher;
-  private List<Student> listOfStudents;
+  @Default
+  @OneToMany
+  @JoinColumn(name = "register_id")
+  private List<Student> listOfStudents = new ArrayList<>();
 
-  RegisterResponseDTO toDto() {
+  RegisterResponseDTO toResponseDto() {
     List<StudentResponseDTO> list = listOfStudents != null
         ? listOfStudents.stream()
                         .map(student -> student.toResponseDto())
                         .collect(Collectors.toList())
-        : null;
+        : new ArrayList<>();
     return RegisterResponseDTO.builder()
-                             .teacher(teacher.toDto())
-                             .listOfStudents(list)
-                             .build();
+                              .teacher(teacher.toDto())
+                              .listOfStudents(list)
+                              .build();
   }
 
+  public void addAllStudents(List<Student> newStudent) {
+    listOfStudents.clear();
+    listOfStudents.addAll(newStudent);
+  }
+
+  public void addStudent(Student student) {
+    listOfStudents.add(student);
+  }
 }

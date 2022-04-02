@@ -3,28 +3,28 @@ package com.example.demo.grade;
 import com.github.javafaker.Faker;
 import java.time.ZoneId;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class GradeFactoryFaker {
 
   private static final Faker FAKER = Faker.instance(new Random(81));
 
-  static GradeDTO toDto(Grade entity){
+  static GradeDTO toDto(Grade entity) {
     return GradeDTO.builder()
-        .date(entity.getDate())
-        .grade(entity.getGrade())
-        .subject(entity.getSubject())
-        .build();
+                   .date(entity.getDate())
+                   .grade(entity.getGrade())
+                   .subject(entity.getSubject())
+                   .description(entity.getDescription())
+                   .build();
   }
 
-  public static Grade toEntity(GradeDTO dto){
+  public static Grade toEntity(GradeDTO dto) {
     return Grade.builder()
-        .id(UUID.randomUUID())
-        .date(dto.getDate())
-        .grade(dto.getGrade())
-        .subject(dto.getSubject())
-        .build();
+                .date(dto.getDate())
+                .grade(dto.getGrade())
+                .subject(dto.getSubject())
+                .description(dto.getDescription())
+                .build();
   }
 
   public static GradeDTO getValidGradeDto() {
@@ -32,15 +32,17 @@ public class GradeFactoryFaker {
                    .date(FAKER.date().past(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                    .grade(Integer.parseInt(FAKER.regexify("([1-6]){1}")))
                    .subject(FAKER.name().name())
+                   .description(FAKER.name().title())
                    .build();
   }
 
   public static Grade getValidGradeEntity() {
     return Grade.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
                 .date(FAKER.date().past(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                 .grade(Integer.parseInt(FAKER.regexify("([1-6]){1}")))
                 .subject(FAKER.name().name())
+                .description(FAKER.name().title())
                 .build();
   }
 
@@ -49,6 +51,7 @@ public class GradeFactoryFaker {
                    .date(FAKER.date().future(2021, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                    .grade(Integer.parseInt(FAKER.numerify("##")))
                    .subject(FAKER.name().name())
+                   .description(FAKER.name().title())
                    .build();
   }
 

@@ -1,7 +1,6 @@
 package com.example.demo.teacher;
 
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,7 @@ public class TeacherController {
   private final TeacherService teacherService;
 
   @GetMapping("/{id}")
-  public TeacherDTO getTeacherById(@PathVariable UUID id) {
+  public TeacherDTO getTeacherById(@PathVariable Long id) {
     TeacherDTO teacher = teacherService.getTeacherById(id);
     return teacher;
   }
@@ -39,13 +38,13 @@ public class TeacherController {
   }
 
   @PutMapping("/{id}")
-  public TeacherDTO updateTeacher(@PathVariable UUID id, @RequestParam String lastName, @RequestParam int age) {
+  public TeacherDTO updateTeacher(@PathVariable Long id, @RequestParam String lastName, @RequestParam int age) {
     TeacherDTO updatedTeacher = teacherService.updateTeacher(id, lastName, age);
     return updatedTeacher;
   }
 
   @DeleteMapping("/{id}")
-  public void deleteTeacher(@PathVariable UUID id) {
+  public void deleteTeacher(@PathVariable Long id) {
     teacherService.deleteTeacher(id);
   }
 }

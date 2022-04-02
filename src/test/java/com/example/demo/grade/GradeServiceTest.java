@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,66 +22,83 @@ class GradeServiceTest {
   @InjectMocks
   private GradeService gradeService;
   @Mock
-  private GradeRepositoryFaker gradeRepositoryFaker;
+  private GradeRepository gradeRepository;
 
   @Test
-  void getGradeByIdReturnsProperGrade() throws ClassNotFoundException {
+  void getGradeByIdReturnsProperGrade() {
     Grade gradeEntity = getValidGradeEntity();
-    UUID id = gradeEntity.getId();
+    Long id = gradeEntity.getId();
 
-    when(gradeRepositoryFaker.findById(id)).thenReturn(gradeEntity);
+    when(gradeRepository.findById(id)).thenReturn(Optional.of(gradeEntity));
 
     GradeDTO gradeDto = gradeService.getGradeById(id);
-    assertEquals(gradeEntity.getDate(), gradeDto.getDate());
-    assertEquals(gradeEntity.getGrade(), gradeDto.getGrade());
-    assertEquals(gradeEntity.getSubject(), gradeDto.getSubject());
+    compareGradeEntityToGradeDto(gradeEntity, gradeDto);
   }
 
   @Test
   void getAllGradesReturnsProperGradeList() {
     List<Grade> entityList = List.of(getValidGradeEntity());
 
-    when(gradeRepositoryFaker.findAll()).thenReturn(entityList);
+    when(gradeRepository.findAll()).thenReturn(entityList);
 
     List<GradeDTO> dtoList = gradeService.getAllGrades();
     assertEquals(1, dtoList.size());
-    assertEquals(entityList.get(0).getDate(), dtoList.get(0).getDate());
-    assertEquals(entityList.get(0).getGrade(), dtoList.get(0).getGrade());
-    assertEquals(entityList.get(0).getSubject(), dtoList.get(0).getSubject());
+    compareGradeEntityToGradeDto(entityList.get(0), dtoList.get(0));
   }
 
   @Test
-  void createGradeReturnsProperGrade() throws ClassNotFoundException {
+  void createGradeReturnsProperGrade() {
     Grade newGrade = getValidGradeEntity();
 
-    when(gradeRepositoryFaker.save( any(Grade.class))).thenReturn(newGrade);
+    when(gradeRepository.save(any(Grade.class))).thenReturn(newGrade);
 
     GradeDTO createdGrade = gradeService.createGrade(toDto(newGrade));
+    compareGradeEntityToGradeDto(newGrade, createdGrade);
+
+  }
+
+  @Test
+  void createGradeEntityReturnsProperGrade() {
+    Grade newGrade = getValidGradeEntity();
+
+    when(gradeRepository.save(any(Grade.class))).thenReturn(newGrade);
+
+    Grade createdGrade = gradeService.createGradeEntity(newGrade);
     assertEquals(newGrade.getDate(), createdGrade.getDate());
     assertEquals(newGrade.getGrade(), createdGrade.getGrade());
     assertEquals(newGrade.getSubject(), createdGrade.getSubject());
+    assertEquals(newGrade.getDescription(), createdGrade.getDescription());
   }
 
   @Test
-  void updateGradeReturnsProperGrade() throws ClassNotFoundException {
+  void updateGradeReturnsProperGrade() {
     Grade gradeEntity = getValidGradeEntity();
-    UUID id = gradeEntity.getId();
+    Long id = gradeEntity.getId();
     int grade = 5;
     String subject = "Historia";
 
-    when(gradeRepositoryFaker.findById(id)).thenReturn(gradeEntity);
+    when(gradeRepository.findById(id)).thenReturn(Optional.of(gradeEntity));
+    when(gradeRepository.save(any(Grade.class))).thenReturn(gradeEntity);
 
     GradeDTO updatedGrade = gradeService.updateGrade(id, grade, subject);
     assertEquals(gradeEntity.getDate(), updatedGrade.getDate());
     assertEquals(grade, updatedGrade.getGrade());
     assertEquals(subject, updatedGrade.getSubject());
+    assertEquals(gradeEntity.getDescription(), updatedGrade.getDescription());
   }
 
   @Test
-  void deleteGrade(){
+  void deleteGrade() {
     Grade gradeEntity = getValidGradeEntity();
-    UUID id = gradeEntity.getId();
+    Long id = gradeEntity.getId();
     gradeService.deleteGrade(id);
-    verify(gradeRepositoryFaker, times(1)).deleteById(id);
+    verify(gradeRepository, times(1)).deleteById(id);
+  }
+
+  private void compareGradeEntityToGradeDto(Grade gradeEntity, GradeDTO gradeDto) {
+    assertEquals(gradeEntity.getDate(), gradeDto.getDate());
+    assertEquals(gradeEntity.getGrade(), gradeDto.getGrade());
+    assertEquals(gradeEntity.getSubject(), gradeDto.getSubject());
+    assertEquals(gradeEntity.getDescription(), gradeDto.getDescription());
   }
 }

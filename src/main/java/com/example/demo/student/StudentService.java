@@ -1,96 +1,86 @@
 package com.example.demo.student;
 
 import com.example.demo.exception.BusinessLogicException;
-import com.example.demo.grade.GradeDTO;
+import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 public class StudentService {
 
-  private final StudentRepositoryFaker studentRepositoryFaker;
   private final GradeService gradeService;
+  private final StudentRepository studentRepository;
 
-  @Autowired
-  public StudentService(GradeService gradeService) {
-    this.gradeService = gradeService;
-    this.studentRepositoryFaker = new StudentRepositoryFaker();
-  }
-
-  public StudentService(@Autowired GradeService gradeService, StudentRepositoryFaker studentRepositoryFaker) {
-    this.gradeService = gradeService;
-    this.studentRepositoryFaker = studentRepositoryFaker;
-  }
-
-  StudentResponseDTO getStudentById(UUID id) {
-    try {
-      Student takenStudent = studentRepositoryFaker.findById(id);
-      return takenStudent.toResponseDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  StudentResponseDTO getStudentById(Long id) {
+    Student takenStudent = findStudentById(id);
+    return takenStudent.toResponseDto();
   }
 
   public List<StudentResponseDTO> getAllStudents() {
-    List<StudentResponseDTO> takenStudents = studentRepositoryFaker.findAll().stream()
-                                                                   .map(student -> student.toResponseDto())
-                                                                   .collect(Collectors.toList());
+    List<StudentResponseDTO> takenStudents = studentRepository.findAll().stream()
+                                                              .map(student -> student.toResponseDto())
+                                                              .collect(Collectors.toList());
     return takenStudents;
   }
 
   public StudentResponseDTO createStudent(@Valid final StudentRequestDTO newStudent) {
-    try {
-      List<GradeDTO> listOfGradesDto = newStudent.getListOfGrades();
-      if (listOfGradesDto != null) {
-        listOfGradesDto
-            .forEach(gradeDTO -> gradeService.createGrade(gradeDTO));
-      }
-      Student save = studentRepositoryFaker.save(newStudent.toEntity());
-      return save.toResponseDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Nie udalo sie utworzyc nowego studenta");
-    }
+    Student studentEntity = newStudent.toEntity();
+    Student save = createStudentEntity(studentEntity);
+    return save.toResponseDto();
   }
 
-  StudentResponseDTO updateStudent(UUID id, String name, String email) {
-    try {
-      Student updatedStudent = studentRepositoryFaker.findById(id);
-      updatedStudent.setName(name);
-      updatedStudent.setEmail(email);
-      return updatedStudent.toResponseDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  public Student createStudentEntity(Student studentEntity) {
+    List<Grade> listOfGrades = studentEntity.getListOfGrades();
+    listOfGrades.forEach(grade -> gradeService.createGradeEntity(grade));
+    Student save = studentRepository.save(studentEntity);
+    return save;
   }
 
-  public void deleteStudent(UUID id) {
-    studentRepositoryFaker.deleteById(id);
+  StudentResponseDTO updateStudent(Long id, String name, String email) {
+    Student updatedStudent = findStudentById(id);
+    updatedStudent.setName(name);
+    updatedStudent.setEmail(email);
+    return studentRepository.save(updatedStudent).toResponseDto();
   }
 
-  public Map<String, Double> getStudentWithAverage(UUID studentId) {
-    try {
-      Map<String, Double> studentWithAverage = new HashMap<>();
-      Student takenStudent = studentRepositoryFaker.findById(studentId);
-      studentWithAverage.put(takenStudent.getName() + " " + takenStudent.getLastName(),
-                             takenStudent
-                                 .getListOfGrades()
-                                 .stream()
-                                 .mapToDouble(grade -> grade.getGrade())
-                                 .average()
-                                 .orElseThrow(() -> new BusinessLogicException("Bledne dane")));
-      return studentWithAverage;
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  public void deleteStudent(Long id) {
+    studentRepository.deleteById(id);
   }
 
+  public String createFullName(@Nullable String name, @Nullable String lastName) {
+    return Objects.toString(name, "") + " " + Objects.toString(lastName, "");
+  }
+
+  public Map<String, Double> getStudentWithAverage(Long studentId) {
+    Map<String, Double> studentWithAverage = new HashMap<>();
+    Student takenStudent = findStudentById(studentId);
+    studentWithAverage.put(createFullName(takenStudent.getName(), takenStudent.getLastName()),
+                           takenStudent
+                               .getListOfGrades()
+                               .stream()
+                               .mapToDouble(grade -> grade.getGrade())
+                               .average()
+                               .orElse(0.0));
+    return studentWithAverage;
+  }
+
+  private Student findStudentById(Long id) {
+    return studentRepository.findById(id)
+                            .orElseThrow(() -> new BusinessLogicException("Bledne id"));
+  }
+
+  public List<Student> findStudentListByIdList(List<Long> studentIds) {
+    return studentRepository.findAllById(studentIds);
+  }
 }

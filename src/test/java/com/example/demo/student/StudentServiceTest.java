@@ -1,6 +1,8 @@
 package com.example.demo.student;
 
-import static com.example.demo.student.StudentFactoryFaker.getAverageFromDto;
+import static com.example.demo.EntityToDtoComparatorHelper.compareGradeEntityToGradeDto;
+import static com.example.demo.EntityToDtoComparatorHelper.compareStudentEntityToStudentResponseDto;
+import static com.example.demo.grade.GradeFactoryFaker.toEntity;
 import static com.example.demo.student.StudentFactoryFaker.getAverageFromEntity;
 import static com.example.demo.student.StudentFactoryFaker.getSex;
 import static com.example.demo.student.StudentFactoryFaker.getValidStudentEntity;
@@ -12,12 +14,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeService;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,79 +35,89 @@ public class StudentServiceTest {
   @InjectMocks
   private StudentService studentService;
   @Mock
-  private StudentRepositoryFaker studentRepositoryFaker;
+  private StudentRepository studentRepository;
   @Mock
   private GradeService gradeService;
 
-  @Test
-  void getStudentByIdReturnsProperStudent() throws ClassNotFoundException {
-    studentService = new StudentService(gradeService,studentRepositoryFaker);
+  private static Stream<Arguments> provideNameAndLastNameReturnsFullName() {
     Student student = getValidStudentEntity();
-    UUID id = student.getId();
+    String name = student.getName();
+    String lastName = student.getLastName();
+    String expectedResult1 = " " + lastName;
+    String expectedResult2 = name + " ";
+    String expectedResult3 = name + " " + lastName;
+    return Stream.of(
+        Arguments.of(null, null, " "),
+        Arguments.of(null, lastName, expectedResult1),
+        Arguments.of(name, null, expectedResult2),
+        Arguments.of(name, lastName, expectedResult3)
+    );
+  }
 
-    when(studentRepositoryFaker.findById(id)).thenReturn(student);
+  @Test
+  void getStudentByIdReturnsProperStudent() {
+    studentService = new StudentService(gradeService, studentRepository);
+    Student student = getValidStudentEntity();
+    Long id = student.getId();
+
+    when(studentRepository.findById(id)).thenReturn(Optional.of(student));
 
     StudentResponseDTO studentResponseDto = studentService.getStudentById(id);
-    assertEquals(student.getName(), studentResponseDto.getName());
-    assertEquals(student.getLastName(), studentResponseDto.getLastName());
-    assertEquals(student.getEmail(), studentResponseDto.getEmail());
-    assertEquals(student.getDateOfBirth(), studentResponseDto.getDateOfBirth());
-    assertEquals(student.getAge(), studentResponseDto.getAge());
-    assertEquals(student.getListOfGrades().get(0).getDate(), studentResponseDto.getListOfGrades().get(0).getDate());
-    assertEquals(student.getListOfGrades().get(0).getGrade(), studentResponseDto.getListOfGrades().get(0).getGrade());
-    assertEquals(student.getListOfGrades().get(0).getSubject(), studentResponseDto.getListOfGrades().get(0).getSubject());
-    assertEquals(getAverageFromEntity(student.getListOfGrades()), studentResponseDto.getAverage());
-    assertEquals(getSex(student.getName()), studentResponseDto.getSex());
+    compareStudentEntityToStudentResponseDto(student, studentResponseDto);
   }
 
   @Test
-  void getAllStudentsReturnsProperStudentList(){
-    List<Student> entityList = List.of(getValidStudentEntity(), getValidStudentEntity());
+  void getAllStudentsReturnsProperStudentList() {
+    List<Student> entityList = List.of(getValidStudentEntity());
 
-    when(studentRepositoryFaker.findAll()).thenReturn(entityList);
+    when(studentRepository.findAll()).thenReturn(entityList);
 
     List<StudentResponseDTO> dtoList = studentService.getAllStudents();
-    assertEquals(entityList.get(0).getName(), dtoList.get(0).getName());
-    assertEquals(entityList.get(0).getLastName(), dtoList.get(0).getLastName());
-    assertEquals(entityList.get(0).getEmail(), dtoList.get(0).getEmail());
-    assertEquals(entityList.get(0).getDateOfBirth(), dtoList.get(0).getDateOfBirth());
-    assertEquals(entityList.get(0).getAge(), dtoList.get(0).getAge());
-    assertEquals(entityList.get(0).getAge(), dtoList.get(0).getAge());
-    assertEquals(entityList.get(0).getListOfGrades().get(0).getDate(), dtoList.get(0).getListOfGrades().get(0).getDate());
-    assertEquals(entityList.get(0).getListOfGrades().get(0).getGrade(), dtoList.get(0).getListOfGrades().get(0).getGrade());
-    assertEquals(entityList.get(0).getListOfGrades().get(0).getSubject(), dtoList.get(0).getListOfGrades().get(0).getSubject());
-    assertEquals(getAverageFromEntity(entityList.get(0).getListOfGrades()), dtoList.get(0).getAverage());
-    assertEquals(getSex(entityList.get(0).getName()), dtoList.get(0).getSex());
+    compareStudentEntityToStudentResponseDto(entityList.get(0), dtoList.get(0));
   }
 
   @Test
-  void createStudentReturnsProperStudent() throws ClassNotFoundException {
+  void createStudentReturnsProperStudent() {
     StudentRequestDTO requestDto = getValidStudentRequestDto();
+    Grade grade = toEntity(requestDto.getListOfGrades().get(0));
 
-    when(studentRepositoryFaker.save(any(Student.class))).thenReturn(toEntity(requestDto));
+    when(studentRepository.save(any(Student.class))).thenReturn(toEntity(requestDto));
+    when(gradeService.createGradeEntity(any(Grade.class))).thenReturn(grade);
 
     StudentResponseDTO createdStudent = studentService.createStudent(requestDto);
-    assertEquals(requestDto.getName(), createdStudent.getName());
-    assertEquals(requestDto.getLastName(), createdStudent.getLastName());
-    assertEquals(requestDto.getEmail(), createdStudent.getEmail());
-    assertEquals(requestDto.getDateOfBirth(), createdStudent.getDateOfBirth());
-    assertEquals(requestDto.getAge(), createdStudent.getAge());
-    assertEquals(requestDto.getListOfGrades().get(0).getDate(), createdStudent.getListOfGrades().get(0).getDate());
-    assertEquals(requestDto.getListOfGrades().get(0).getGrade(), createdStudent.getListOfGrades().get(0).getGrade());
-    assertEquals(requestDto.getListOfGrades().get(0).getSubject(), createdStudent.getListOfGrades().get(0).getSubject());
-    assertEquals(getAverageFromDto(requestDto.getListOfGrades()), createdStudent.getAverage());
-    assertEquals(getSex(requestDto.getName()), createdStudent.getSex());
-
+    compareStudentEntityToStudentResponseDto(toEntity(requestDto), createdStudent);
   }
 
   @Test
-  void updateStudentReturnsProperStudent() throws ClassNotFoundException {
+  void createStudentEntityReturnsProperStudent() {
+    Student studentEntity = getValidStudentEntity();
+    Grade grade = studentEntity.getListOfGrades().get(0);
+
+    when(studentRepository.save(any(Student.class))).thenReturn(studentEntity);
+    when(gradeService.createGradeEntity(any(Grade.class))).thenReturn(grade);
+
+    Student createdStudent = studentService.createStudentEntity(studentEntity);
+    assertEquals(studentEntity.getName(), createdStudent.getName());
+    assertEquals(studentEntity.getLastName(), createdStudent.getLastName());
+    assertEquals(studentEntity.getEmail(), createdStudent.getEmail());
+    assertEquals(studentEntity.getDateOfBirth(), createdStudent.getDateOfBirth());
+    assertEquals(studentEntity.getAge(), createdStudent.getAge());
+    assertEquals(studentEntity.getListOfGrades().get(0).getDate(), createdStudent.getListOfGrades().get(0).getDate());
+    assertEquals(studentEntity.getListOfGrades().get(0).getGrade(), createdStudent.getListOfGrades().get(0).getGrade());
+    assertEquals(studentEntity.getListOfGrades().get(0).getSubject(), createdStudent.getListOfGrades().get(0).getSubject());
+    assertEquals(studentEntity.getListOfGrades().get(0).getDescription(), createdStudent.getListOfGrades().get(0).getDescription());
+    assertEquals(getSex(studentEntity.getName()), createdStudent.getSex());
+  }
+
+  @Test
+  void updateStudentReturnsProperStudent() {
     Student entity = getValidStudentEntity();
-    UUID id = entity.getId();
+    Long id = entity.getId();
     String name = "Anastasia";
     String email = "anastasia.paczkowska@hotmail.pl";
 
-    when(studentRepositoryFaker.findById(id)).thenReturn(entity);
+    when(studentRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(studentRepository.save(any(Student.class))).thenReturn(entity);
 
     StudentResponseDTO updatedStudent = studentService.updateStudent(id, name, email);
     assertEquals(name, updatedStudent.getName());
@@ -108,21 +125,17 @@ public class StudentServiceTest {
     assertEquals(email, updatedStudent.getEmail());
     assertEquals(entity.getDateOfBirth(), updatedStudent.getDateOfBirth());
     assertEquals(entity.getAge(), updatedStudent.getAge());
-    assertEquals(entity.getAge(), updatedStudent.getAge());
-    assertEquals(entity.getListOfGrades().get(0).getDate(), updatedStudent.getListOfGrades().get(0).getDate());
-    assertEquals(entity.getListOfGrades().get(0).getGrade(), updatedStudent.getListOfGrades().get(0).getGrade());
-    assertEquals(entity.getListOfGrades().get(0).getSubject(), updatedStudent.getListOfGrades().get(0).getSubject());
+    compareGradeEntityToGradeDto(entity.getListOfGrades().get(0), updatedStudent.getListOfGrades().get(0));
     assertEquals(getAverageFromEntity(entity.getListOfGrades()), updatedStudent.getAverage());
     assertEquals(getSex(name), updatedStudent.getSex());
   }
 
   @Test
-  void getStudentWithAverageReturnsProperMap() throws ClassNotFoundException {
+  void getStudentWithAverageReturnsProperMap() {
     Student entity = getValidStudentEntity();
-    UUID id = entity.getId();
+    Long id = entity.getId();
 
-
-    when(studentRepositoryFaker.findById(id)).thenReturn(entity);
+    when(studentRepository.findById(id)).thenReturn(Optional.of(entity));
 
     Map<String, Double> studentWithAverage = studentService.getStudentWithAverage(id);
     var firstEntry = studentWithAverage.entrySet().iterator().next();
@@ -133,11 +146,36 @@ public class StudentServiceTest {
   }
 
   @Test
-  void deleteStudent(){
+  void deleteStudent() {
     Student studentEntity = getValidStudentEntity();
-    UUID id = studentEntity.getId();
+    Long id = studentEntity.getId();
     studentService.deleteStudent(id);
-    verify(studentRepositoryFaker, times(1)).deleteById(id);
+    verify(studentRepository, times(1)).deleteById(id);
   }
 
+  @Test
+  void findStudentListByIdListReturnsProperList() {
+    List<Student> listOfStudents = List.of(getValidStudentEntity());
+    List<Long> ids = List.of(listOfStudents.get(0).getId());
+
+    when(studentRepository.findAllById(ids)).thenReturn(listOfStudents);
+
+    List<Student> takenStudents = studentService.findStudentListByIdList(ids);
+    assertEquals(listOfStudents.get(0).getName(), takenStudents.get(0).getName());
+    assertEquals(listOfStudents.get(0).getLastName(), takenStudents.get(0).getLastName());
+    assertEquals(listOfStudents.get(0).getEmail(), takenStudents.get(0).getEmail());
+    assertEquals(listOfStudents.get(0).getDateOfBirth(), takenStudents.get(0).getDateOfBirth());
+    assertEquals(listOfStudents.get(0).getAge(), takenStudents.get(0).getAge());
+    assertEquals(listOfStudents.get(0).getListOfGrades().get(0).getDate(), takenStudents.get(0).getListOfGrades().get(0).getDate());
+    assertEquals(listOfStudents.get(0).getListOfGrades().get(0).getGrade(), takenStudents.get(0).getListOfGrades().get(0).getGrade());
+    assertEquals(listOfStudents.get(0).getListOfGrades().get(0).getSubject(), takenStudents.get(0).getListOfGrades().get(0).getSubject());
+    assertEquals(listOfStudents.get(0).getListOfGrades().get(0).getDescription(), takenStudents.get(0).getListOfGrades().get(0).getDescription());
+    assertEquals(listOfStudents.get(0).getSex(), takenStudents.get(0).getSex());
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideNameAndLastNameReturnsFullName")
+  void createFullNameReturnsProperString(String name, String lastName, String expected) {
+    assertEquals(expected, studentService.createFullName(name, lastName));
+  }
 }

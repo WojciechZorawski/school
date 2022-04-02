@@ -2,22 +2,20 @@ package com.example.demo.teacher;
 
 import com.example.demo.exception.BusinessLogicException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-class TeacherService {
+@RequiredArgsConstructor
+public class TeacherService {
 
-  TeacherRepositoryFaker teacherRepository = new TeacherRepositoryFaker();
+  private final TeacherRepository teacherRepository;
 
-  TeacherDTO getTeacherById(UUID id) {
-    try {
-      Teacher takenTeacher = teacherRepository.findById(id);
-      return takenTeacher.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  TeacherDTO getTeacherById(Long id) {
+    Teacher takenTeacher = findTeacherById(id);
+    return takenTeacher.toDto();
+
   }
 
   List<TeacherDTO> getAllTeachers() {
@@ -28,27 +26,28 @@ class TeacherService {
   }
 
   TeacherDTO createTeacher(TeacherDTO newTeacher) {
-    try {
-      Teacher save = teacherRepository.save(newTeacher.toEntity());
-      return save.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Nie udalo sie utworzyc nowego nauczyciela");
-    }
+    Teacher save = createTeacherEntity(newTeacher.toEntity());
+    return save.toDto();
   }
 
-  TeacherDTO updateTeacher(UUID id, String lastName, int age) {
-    try {
-      Teacher updatedTeacher = teacherRepository.findById(id);
-      updatedTeacher.setLastName(lastName);
-      updatedTeacher.setAge(age);
-      return updatedTeacher.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  public Teacher createTeacherEntity(Teacher teacherEntity) {
+    Teacher save = teacherRepository.save(teacherEntity);
+    return save;
   }
 
-  void deleteTeacher(UUID id) {
+  TeacherDTO updateTeacher(Long id, String lastName, int age) {
+    Teacher updatedTeacher = findTeacherById(id);
+    updatedTeacher.setLastName(lastName);
+    updatedTeacher.setAge(age);
+    return teacherRepository.save(updatedTeacher).toDto();
+  }
+
+  void deleteTeacher(Long id) {
     teacherRepository.deleteById(id);
   }
 
+  public Teacher findTeacherById(Long id) {
+    return teacherRepository.findById(id)
+                            .orElseThrow(() -> new BusinessLogicException("Bledne id"));
+  }
 }

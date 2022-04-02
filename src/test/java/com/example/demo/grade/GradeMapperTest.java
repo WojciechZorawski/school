@@ -3,7 +3,6 @@ package com.example.demo.grade;
 import static com.example.demo.grade.GradeFactoryFaker.getValidGradeDto;
 import static com.example.demo.grade.GradeFactoryFaker.getValidGradeEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ class GradeMapperTest {
     assertEquals(dto.getDate(), entity.getDate());
     assertEquals(dto.getGrade(), entity.getGrade());
     assertEquals(dto.getSubject(), entity.getSubject());
-    assertNotNull(entity.getId());
+    assertEquals(dto.getDescription(), entity.getDescription());
   }
 
   @Test
@@ -26,6 +25,6 @@ class GradeMapperTest {
     assertEquals(entity.getDate(), dto.getDate());
     assertEquals(entity.getGrade(), dto.getGrade());
     assertEquals(entity.getSubject(), dto.getSubject());
-
+    assertEquals(entity.getDescription(), dto.getDescription());
   }
 }

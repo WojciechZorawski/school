@@ -1,11 +1,8 @@
 package com.example.demo.register;
 
-import com.example.demo.student.StudentRequestDTO;
 import com.example.demo.student.StudentResponseDTO;
-import com.example.demo.teacher.TeacherDTO;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,7 +22,7 @@ public class RegisterController {
   private final RegisterService registerService;
 
   @GetMapping("/{id}")
-  public RegisterResponseDTO getRegisterById(@PathVariable UUID id) {
+  public RegisterResponseDTO getRegisterById(@PathVariable Long id) {
     RegisterResponseDTO register = registerService.getRegisterById(id);
     return register;
   }
@@ -36,13 +34,13 @@ public class RegisterController {
   }
 
   @GetMapping("/teacher/{teacherId}")
-  public List<StudentResponseDTO> getStudentsByTeacherId(@PathVariable UUID teacherId) {
+  public List<StudentResponseDTO> getStudentsByTeacherId(@PathVariable Long teacherId) {
     List<StudentResponseDTO> list = registerService.getStudentsByTeacherId(teacherId);
     return list;
   }
 
   @GetMapping("/average/{registerId}")
-  public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(@PathVariable UUID registerId) {
+  public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(@PathVariable Long registerId) {
     Map<String, List<Map<String, Double>>> studentsFromRegisterWithAverage = registerService.getStudentsFromRegisterWithAverage(registerId);
     return studentsFromRegisterWithAverage;
   }
@@ -54,25 +52,19 @@ public class RegisterController {
   }
 
   @PutMapping("/update/{registerId}")
-  public RegisterResponseDTO updateRegistersTeacher(@PathVariable UUID registerId, @RequestBody TeacherDTO newTeacher) {
-    RegisterResponseDTO updatedRegistersTeacher = registerService.updateRegistersTeacher(registerId, newTeacher);
+  public RegisterResponseDTO updateRegisterByTeacherId(@PathVariable Long registerId, @RequestParam Long teacherId) {
+    RegisterResponseDTO updatedRegistersTeacher = registerService.updateRegisterByTeacherId(registerId, teacherId);
     return updatedRegistersTeacher;
   }
 
-  @PutMapping("/add/{registerId}")
-  public RegisterResponseDTO addStudentToRegister(@PathVariable UUID registerId, @RequestBody List<StudentRequestDTO> students) {
-    RegisterResponseDTO registerWithNewStudents = registerService.addStudentToRegister(registerId, students);
+  @PutMapping("/{registerId}/addStudent")
+  public RegisterResponseDTO addStudentListToRegisterByStudentIds(@PathVariable Long registerId, @RequestParam List<Long> studentIds) {
+    RegisterResponseDTO registerWithNewStudents = registerService.addStudentListToRegisterByStudentIds(registerId, studentIds);
     return registerWithNewStudents;
   }
 
-  @PutMapping("/remove/{registerId}")
-  public RegisterResponseDTO removeStudentFromRegister(@PathVariable UUID registerId, @RequestBody List<UUID> studentId) {
-    RegisterResponseDTO registerWithRemovedStudents = registerService.removeStudentFromRegister(registerId, studentId);
-    return registerWithRemovedStudents;
-  }
-
   @DeleteMapping("/{id}")
-  public void deleteRegister(@PathVariable UUID id) {
+  public void deleteRegister(@PathVariable Long id) {
     registerService.deleteById(id);
   }
 }

@@ -2,53 +2,51 @@ package com.example.demo.grade;
 
 import com.example.demo.exception.BusinessLogicException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GradeService {
 
-  GradeRepositoryFaker gradeRepositoryFaker = new GradeRepositoryFaker();
+  private final GradeRepository gradeRepository;
 
-  GradeDTO getGradeById(UUID id) {
-    try {
-      Grade takenGrade = gradeRepositoryFaker.findById(id);
-      return takenGrade.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
-
+  GradeDTO getGradeById(Long id) {
+    Grade takenGrade = findGradeById(id);
+    return takenGrade.toDto();
   }
 
   List<GradeDTO> getAllGrades() {
-    List<GradeDTO> takenGrades = gradeRepositoryFaker.findAll().stream()
-        .map(grade -> grade.toDto())
-        .collect(Collectors.toList());
+    List<GradeDTO> takenGrades = gradeRepository.findAll().stream()
+                                                .map(grade -> grade.toDto())
+                                                .collect(Collectors.toList());
     return takenGrades;
   }
 
   public GradeDTO createGrade(GradeDTO newGrade) {
-    try {
-      Grade save = gradeRepositoryFaker.save(newGrade.toEntity());
-      return save.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Nie udalo sie utworzyc nowej oceny");
-    }
+    Grade save = gradeRepository.save(newGrade.toEntity());
+    return save.toDto();
   }
 
-  GradeDTO updateGrade(UUID id, int grade, String subject) {
-    try {
-      Grade updatedGrade = gradeRepositoryFaker.findById(id);
-      updatedGrade.setGrade(grade);
-      updatedGrade.setSubject(subject);
-      return updatedGrade.toDto();
-    } catch (ClassNotFoundException e) {
-      throw new BusinessLogicException("Bledne id");
-    }
+  public Grade createGradeEntity(Grade newGrade) {
+    Grade save = gradeRepository.save(newGrade);
+    return save;
   }
 
-  void deleteGrade(UUID id) {
-    gradeRepositoryFaker.deleteById(id);
+  GradeDTO updateGrade(Long id, int grade, String subject) {
+    Grade updatedGrade = findGradeById(id);
+    updatedGrade.setGrade(grade);
+    updatedGrade.setSubject(subject);
+    return gradeRepository.save(updatedGrade).toDto();
+  }
+
+  void deleteGrade(Long id) {
+    gradeRepository.deleteById(id);
+  }
+
+  private Grade findGradeById(Long id) {
+    return gradeRepository.findById(id)
+                          .orElseThrow(() -> new BusinessLogicException("Bledne id"));
   }
 }

@@ -2,9 +2,10 @@ package com.example.demo.student;
 
 import com.example.demo.grade.Grade;
 import com.example.demo.grade.GradeDTO;
+import com.example.demo.utils.Sex;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -37,19 +38,20 @@ public class StudentRequestDTO {
   private List<GradeDTO> listOfGrades;
 
   public Student toEntity() {
+    Sex setSex = name.endsWith("a") ? Sex.F : Sex.M;
     List<Grade> list = listOfGrades != null
         ? listOfGrades.stream()
                       .map(grade -> grade.toEntity())
                       .collect(Collectors.toList())
-        : null;
+        : new ArrayList<>();
     return Student.builder()
-                  .id(UUID.randomUUID())
                   .name(name)
                   .lastName(lastName)
                   .email(email)
                   .dateOfBirth(dateOfBirth)
                   .age(age)
                   .listOfGrades(list)
+                  .sex(setSex)
                   .build();
   }
 }

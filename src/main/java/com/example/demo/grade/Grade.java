@@ -1,33 +1,35 @@
 package com.example.demo.grade;
 
+import com.example.demo.BaseEntity;
 import java.time.LocalDate;
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@Entity
+@Table(name = "grade")
+@SuperBuilder
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Grade {
+public class Grade extends BaseEntity {
 
-  private UUID id;
   private LocalDate date;
   private int grade;
   private String subject;
+  private String description;
 
   public GradeDTO toDto() {
     return GradeDTO.builder()
-        .date(date)
-        .grade(grade)
-        .subject(subject)
-        .build();
+                   .date(date)
+                   .grade(grade)
+                   .subject(subject)
+                   .description(description)
+                   .build();
   }
-
 }

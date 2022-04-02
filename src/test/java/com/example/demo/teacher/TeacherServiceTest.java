@@ -1,5 +1,6 @@
 package com.example.demo.teacher;
 
+import static com.example.demo.EntityToDtoComparatorHelper.compareTeacherEntityToTeacherResponseDto;
 import static com.example.demo.teacher.TeacherFactoryFaker.getValidTeacherEntity;
 import static com.example.demo.teacher.TeacherFactoryFaker.toDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,57 +23,59 @@ class TeacherServiceTest {
   @InjectMocks
   private TeacherService teacherService;
   @Mock
-  private TeacherRepositoryFaker teacherRepositoryFaker;
+  private TeacherRepository teacherRepository;
 
   @Test
-  void getTeacherByIdReturnsProperTeacher() throws ClassNotFoundException {
+  void getTeacherByIdReturnsProperTeacher() {
     Teacher entity = getValidTeacherEntity();
-    UUID id = entity.getId();
+    Long id = entity.getId();
 
-    when(teacherRepositoryFaker.findById(id)).thenReturn(entity);
+    when(teacherRepository.findById(id)).thenReturn(Optional.of(entity));
 
     TeacherDTO dto = teacherService.getTeacherById(id);
-    assertEquals(entity.getName(), dto.getName());
-    assertEquals(entity.getLastName(), dto.getLastName());
-    assertEquals(entity.getAge(), dto.getAge());
-    assertEquals(entity.getProfession(), dto.getProfession());
+    compareTeacherEntityToTeacherResponseDto(entity, dto);
   }
 
   @Test
   void getAllTeachersReturnsProperTeacherList() {
     List<Teacher> entityList = List.of(getValidTeacherEntity());
 
-    when(teacherRepositoryFaker.findAll()).thenReturn(entityList);
+    when(teacherRepository.findAll()).thenReturn(entityList);
 
     List<TeacherDTO> dtoList = teacherService.getAllTeachers();
     assertEquals(1, dtoList.size());
-    assertEquals(entityList.get(0).getName(), dtoList.get(0).getName());
-    assertEquals(entityList.get(0).getLastName(), dtoList.get(0).getLastName());
-    assertEquals(entityList.get(0).getAge(), dtoList.get(0).getAge());
-    assertEquals(entityList.get(0).getProfession(), dtoList.get(0).getProfession());
+    compareTeacherEntityToTeacherResponseDto(entityList.get(0), dtoList.get(0));
   }
 
   @Test
-  void createTeacherReturnsProperTeacher() throws ClassNotFoundException {
+  void createTeacherReturnsProperTeacher() {
     Teacher newTeacher = getValidTeacherEntity();
 
-    when(teacherRepositoryFaker.save(any(Teacher.class))).thenReturn(newTeacher);
+    when(teacherRepository.save(any(Teacher.class))).thenReturn(newTeacher);
 
     TeacherDTO createdTeacher = teacherService.createTeacher(toDto(newTeacher));
-    assertEquals(newTeacher.getName(), createdTeacher.getName());
-    assertEquals(newTeacher.getLastName(), createdTeacher.getLastName());
-    assertEquals(newTeacher.getAge(), createdTeacher.getAge());
-    assertEquals(newTeacher.getProfession(), createdTeacher.getProfession());
+    compareTeacherEntityToTeacherResponseDto(newTeacher, createdTeacher);
   }
 
   @Test
-  void updateTeacherReturnsProperTeacher() throws ClassNotFoundException {
+  void createTeacherEntityReturnsProperTeacher() {
+    Teacher newTeacher = getValidTeacherEntity();
+
+    when(teacherRepository.save(any(Teacher.class))).thenReturn(newTeacher);
+
+    Teacher createdTeacher = teacherService.createTeacherEntity(newTeacher);
+    compareTeacherEntityToTeacherResponseDto(newTeacher, toDto(createdTeacher));
+  }
+
+  @Test
+  void updateTeacherReturnsProperTeacher() {
     Teacher teacherEntity = getValidTeacherEntity();
-    UUID id = teacherEntity.getId();
+    Long id = teacherEntity.getId();
     String lastName = "Zagrozny";
     int age = 59;
 
-    when(teacherRepositoryFaker.findById(id)).thenReturn(teacherEntity);
+    when(teacherRepository.findById(id)).thenReturn(Optional.of(teacherEntity));
+    when(teacherRepository.save(any(Teacher.class))).thenReturn(teacherEntity);
 
     TeacherDTO updatedTeacher = teacherService.updateTeacher(id, lastName, age);
     assertEquals(teacherEntity.getName(), updatedTeacher.getName());
@@ -82,11 +85,21 @@ class TeacherServiceTest {
   }
 
   @Test
-  void deleteTeacher(){
+  void deleteTeacher() {
     Teacher teacherEntity = getValidTeacherEntity();
-    UUID id = teacherEntity.getId();
+    Long id = teacherEntity.getId();
     teacherService.deleteTeacher(id);
-    verify(teacherRepositoryFaker, times(1)).deleteById(id);
+    verify(teacherRepository, times(1)).deleteById(id);
   }
 
+  @Test
+  void findTeacherByIdReturnsProperTeacher() {
+    Teacher teacherEntity = getValidTeacherEntity();
+    Long id = teacherEntity.getId();
+
+    when(teacherRepository.findById(id)).thenReturn(Optional.of(teacherEntity));
+
+    Teacher teacher = teacherService.findTeacherById(id);
+    compareTeacherEntityToTeacherResponseDto(teacherEntity, toDto(teacher));
+  }
 }
