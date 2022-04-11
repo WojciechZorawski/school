@@ -22,4 +22,9 @@ public class NoteService {
     NoteDTO savedNote = noteRepository.save(noteEntity).toDto();
     return savedNote;
   }
+
+  public Note getNoteById(Long noteId){
+    Note note = noteRepository.getById(noteId);
+    return note;
+  }
 }
