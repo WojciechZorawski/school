@@ -32,7 +32,7 @@ public class StudentController {
     return students;
   }
 
-  @GetMapping("/average/{studentId}")
+  @GetMapping("/{studentId}/average")
   public Map<String, Double> getStudentWithAverage(@PathVariable Long studentId) {
     Map<String, Double> studentWithAverage = studentService.getStudentWithAverage(studentId);
     return studentWithAverage;

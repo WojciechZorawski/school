@@ -75,7 +75,7 @@ public class StudentService {
     return studentWithAverage;
   }
 
-  private Student findStudentById(Long id) {
+  public Student findStudentById(Long id) {
     return studentRepository.findById(id)
                             .orElseThrow(() -> new BusinessLogicException("Bledne id"));
   }

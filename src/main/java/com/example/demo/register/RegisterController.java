@@ -39,7 +39,7 @@ public class RegisterController {
     return list;
   }
 
-  @GetMapping("/average/{registerId}")
+  @GetMapping("/{registerId}/average")
   public Map<String, List<Map<String, Double>>> getStudentsFromRegisterWithAverage(@PathVariable Long registerId) {
     Map<String, List<Map<String, Double>>> studentsFromRegisterWithAverage = registerService.getStudentsFromRegisterWithAverage(registerId);
     return studentsFromRegisterWithAverage;
@@ -51,7 +51,7 @@ public class RegisterController {
     return createdRegister;
   }
 
-  @PutMapping("/update/{registerId}")
+  @PutMapping("/{registerId}/update")
   public RegisterResponseDTO updateRegisterByTeacherId(@PathVariable Long registerId, @RequestParam Long teacherId) {
     RegisterResponseDTO updatedRegistersTeacher = registerService.updateRegisterByTeacherId(registerId, teacherId);
     return updatedRegistersTeacher;
