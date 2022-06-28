@@ -3,6 +3,7 @@ package com.example.school.note;
 import com.example.school.student.Student;
 import com.example.school.teacher.Teacher;
 import java.time.LocalDate;
+import javax.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoteDTO {
 
+  @PastOrPresent
   private LocalDate date;
   private String description;
 
@@ -26,6 +28,5 @@ public class NoteDTO {
                .build();
 
   }
-
 }
 

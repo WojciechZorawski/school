@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "note")
@@ -24,7 +23,6 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor
 public class Note extends BaseEntity {
 
-  @CreatedDate
   private LocalDate date;
   @ManyToOne
   @JoinColumn(name = "student_id", referencedColumnName = "id")
@@ -34,11 +32,11 @@ public class Note extends BaseEntity {
   private Teacher teacher;
   private String description;
 
-  NoteDTO toDto(){
+  NoteDTO toDto() {
     return NoteDTO.builder()
-        .date(date)
-        .description(description)
-        .build();
+                  .date(date)
+                  .description(description)
+                  .build();
 
   }
 
