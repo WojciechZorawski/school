@@ -93,4 +93,47 @@ databaseChangeLog {
       column(name: 'description', type: 'varchar(50)')
     }
   }
+
+  changeSet(id: 'Create note table', author: 'wzorawski') {
+    preConditions(onFail: 'MARK_RAN') {
+      not() {
+        tableExists(tableName: "note")
+      }
+    }
+    createTable(tableName: 'note') {
+      column(name: 'id', type: 'bigint', autoIncrement: true) {
+        constraints(nullable: false, primaryKey: true)
+      }
+      column(name: 'date', type: 'date') {}
+      column(name: 'student_id', type: 'bigint') {}
+      column(name: 'teacher_id', type: 'bigint') {}
+      column(name: 'description', type: 'varchar(256)') {}
+    }
+    addForeignKeyConstraint(constraintName: 'FK_note_student_id',
+        baseTableName: 'note', baseColumnNames: 'student_id',
+        referencedTableName: 'student', referencedColumnNames: 'id')
+
+    addForeignKeyConstraint(constraintName: 'FK_note_teacher_id',
+        baseTableName: 'note', baseColumnNames: 'teacher_id',
+        referencedTableName: 'teacher', referencedColumnNames: 'id')
+
+    createSequence(sequenceName: 'SEQ_note', startValue: '1')
+  }
+
+  changeSet(id: 'Create user table', author: 'wzorawski') {
+    preConditions(onFail: 'MARK_RAN') {
+      not() {
+        tableExists(tableName: "user")
+      }
+    }
+    createTable(tableName: 'user') {
+      column(name: 'name', type: 'varchar(20)') {}
+      column(name: 'lastName', type: 'varchar(25)') {}
+      column(name: 'login', type: 'varchar(30)') {
+        constraints(nullable: false, primaryKey: true)
+      }
+      column(name: 'password', type: 'varchar(50)') {}
+      column(name: 'user_role', type: 'varchar(7)') {}
+    }
+  }
 }
